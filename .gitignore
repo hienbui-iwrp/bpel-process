@@ -3,13 +3,20 @@ build/
 
 # Ignore JDeveloper files
 .metadata/
+.data/
+temp/
 .jdeveloper/
 .jws.*
 *.jpr.xml
 *.jws.xml
 *.mxml
+.designer/
+
 
 # Ignore deployment files
 deploy/
 undeploy/
 logs/
+classes/
+javadoc/
+SCA-INF/
