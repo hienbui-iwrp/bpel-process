@@ -1,0 +1,15 @@
+# Ignore build files
+build/
+
+# Ignore JDeveloper files
+.metadata/
+.jdeveloper/
+.jws.*
+*.jpr.xml
+*.jws.xml
+*.mxml
+
+# Ignore deployment files
+deploy/
+undeploy/
+logs/
