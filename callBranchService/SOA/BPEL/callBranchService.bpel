@@ -20,7 +20,9 @@
          xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/addBranch"
          xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getBranchDetail"
          xmlns:ns3="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
-         xmlns:ns4="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch">
+         xmlns:ns4="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
+         xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/updateBranch"
+         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService" location="../WSDLs/callBranchService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -38,6 +40,7 @@
     <partnerLink name="callbranchservice_client" partnerLinkType="client:callBranchService" myRole="callBranchServiceProvider"/>
     <partnerLink name="addBranch" partnerLinkType="ns1:addBranch_plt" partnerRole="addBranch_role"/>
     <partnerLink name="getBranchDetail" partnerLinkType="ns2:getBranchDetail_plt" partnerRole="getBranchDetail_role"/>
+    <partnerLink name="updateBranch" partnerLinkType="ns5:updateBranch_plt" partnerRole="updateBranch_role"/>
   </partnerLinks>
 
   <!-- 
@@ -55,6 +58,10 @@
     <variable name="ReplyAdd_addBranch_OutputVariable" messageType="client:addBranchResponse"/>
     <variable name="CallGetBranchDetail_getBranchDetail_OutputVariable" messageType="ns2:GetResponse_msg_out"/>
     <variable name="callAddBranch_addBranch_OutputVariable" messageType="ns1:UpdateResponse_msg_out"/>
+    <variable name="OnMessage_updateBranch_InputVariable" messageType="client:updateBranchRequest"/>
+    <variable name="CallUpdateBranch_InputVariable" messageType="ns5:Body_msg_in"/>
+    <variable name="CallUpdateBranch_OutputVariable" messageType="ns5:UpdateResponse_msg_out"/>
+    <variable name="Reply_updateBranch" messageType="client:updateBranchResponse"/>
   </variables>
 
   <!-- 
@@ -94,7 +101,7 @@
                  variable="OnMessage_addBranch_InputVariable"
                  portType="client:callBranchService" operation="addBranch">
         <sequence name="Sequence2">
-          <assign name="setipAddBranch">
+          <assign name="setupAddBranch">
             <copy>
               <from>$OnMessage_addBranch_InputVariable.payload</from>
               <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$callAddBranch_addBranch_InputVariable.Body</to>
@@ -113,7 +120,30 @@
                  portType="client:callBranchService" operation="addBranch"/>
         </sequence>
       </onMessage>
-    </pick>
+    <onMessage bpelx:name="UpdateBranch" partnerLink="callbranchservice_client"
+               variable="OnMessage_updateBranch_InputVariable" portType="client:callBranchService"
+               operation="updateBranch">
+      <sequence name="Sequence3">
+        <assign name="SetupUpdateBranch">
+          <copy>
+            <from>$OnMessage_updateBranch_InputVariable.payload</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallUpdateBranch_InputVariable.Body</to>
+          </copy>
+        </assign>
+        <invoke name="CallUpdateBranch" bpelx:invokeAsDetail="no" partnerLink="updateBranch"
+                portType="ns5:updateBranch_ptt" operation="updateBranch"
+                inputVariable="CallUpdateBranch_InputVariable" outputVariable="CallUpdateBranch_OutputVariable"/>
+        <assign name="outputUpdateBranch">
+          <copy>
+            <from>$CallUpdateBranch_OutputVariable.UpdateResponse</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Reply_updateBranch.payload</to>
+          </copy>
+        </assign>
+        <reply name="Reply1" partnerLink="callbranchservice_client" variable="Reply_updateBranch"
+               portType="client:callBranchService" operation="updateBranch"/>
+      </sequence>
+    </onMessage>
+  </pick>
 
 
 </process>

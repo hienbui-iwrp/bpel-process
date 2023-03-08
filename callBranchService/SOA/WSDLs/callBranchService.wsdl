@@ -5,6 +5,7 @@
              xmlns:client="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
              xmlns:clientAddBranch="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
              xmlns:clientGetBranchDetail="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
+              xmlns:clientUpdateBranch="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
              xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -22,6 +23,9 @@
 		</schema>
                 <schema xmlns="http://www.w3.org/2001/XMLSchema">
 			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail" schemaLocation="../Schemas/getBranchDetail.xsd" />
+		</schema>
+                <schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch" schemaLocation="../Schemas/updateBranch.xsd" />
 		</schema>
 	</wsdl:types>
 
@@ -50,13 +54,17 @@
 
 	<!-- portType implemented by the callBranchService BPEL process -->
 	<wsdl:portType name="callBranchService">
-  <wsdl:operation name="getBranchDetail">
-   <wsdl:input message="client:getBranchDetailRequest"/>
-   <wsdl:output message="client:getBranchDetailResponse"/>
-  </wsdl:operation>
-  <wsdl:operation name="addBranch">
-   <wsdl:input message="client:addBranchRequest"/>
-   <wsdl:output message="client:addBranchResponse"/>
+              <wsdl:operation name="getBranchDetail">
+                       <wsdl:input message="client:getBranchDetailRequest"/>
+                       <wsdl:output message="client:getBranchDetailResponse"/>
+              </wsdl:operation>
+              <wsdl:operation name="addBranch">
+                     <wsdl:input message="client:addBranchRequest"/>
+                     <wsdl:output message="client:addBranchResponse"/>
+              </wsdl:operation>
+  <wsdl:operation name="updateBranch">
+   <wsdl:input message="client:updateBranchRequest"/>
+   <wsdl:output message="client:updateBranchResponse"/>
   </wsdl:operation>
  </wsdl:portType>
 
@@ -66,4 +74,10 @@
 	<plnk:partnerLinkType name="callBranchService">
 		<plnk:role name="callBranchServiceProvider" portType="client:callBranchService"/>
 	</plnk:partnerLinkType>
+ <wsdl:message name="updateBranchRequest">
+  <wsdl:part name="payload" element="clientUpdateBranch:Body"/>
+ </wsdl:message>
+ <wsdl:message name="updateBranchResponse">
+  <wsdl:part name="payload" element="clientUpdateBranch:UpdateResponse"/>
+ </wsdl:message>
 </wsdl:definitions>
