@@ -21,6 +21,8 @@
           location="WSDLs/updateBranch.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/deleteBranch"
           location="WSDLs/deleteBranch.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff"
+          location="WSDLs/getStaff.wsdl" importType="wsdl"/>
   <service name="callbranchservice_client_ep" ui:wsdlLocation="WSDLs/callBranchService.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService#wsdl.interface(callBranchService)"/>
     <binding.ws port="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService#wsdl.endpoint(callbranchservice_client_ep/callBranchService_pt)"/>
@@ -44,6 +46,9 @@
       </reference>
       <reference name="deleteBranch" ui:wsdlLocation="WSDLs/deleteBranch.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/deleteBranch#wsdl.interface(deleteBranch_ptt)"/>
+      </reference>
+      <reference name="getStaff" ui:wsdlLocation="WSDLs/getStaff.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff#wsdl.interface(getStaff_ptt)"/>
       </reference>
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
@@ -84,6 +89,15 @@
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
+  <reference name="getStaff" ui:wsdlLocation="WSDLs/getStaff.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff#wsdl.interface(getStaff_ptt)"/>
+    <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff#wsdl.endpoint(getStaff/getStaff_pt)"
+                location="WSDLs/getStaff.wsdl" supports="http">
+      <property name="http.verb" type="xs:string" many="false">POST</property>
+      <property name="endpointURI" type="xs:string" many="false">http://localhost:10000/api/bff/branch-service/staff/get</property>
+      <property name="http.payload" type="xs:string" many="false">xml</property>
+    </binding.ws>
+  </reference>
   <wire>
     <source.uri>callbranchservice_client_ep</source.uri>
     <target.uri>callBranchService/callbranchservice_client</target.uri>
@@ -103,5 +117,9 @@
   <wire>
     <source.uri>callBranchService/deleteBranch</source.uri>
     <target.uri>deleteBranch</target.uri>
+  </wire>
+  <wire>
+    <source.uri>callBranchService/getStaff</source.uri>
+    <target.uri>getStaff</target.uri>
   </wire>
 </composite>

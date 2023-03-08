@@ -7,6 +7,7 @@
              xmlns:clientGetBranchDetail="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
               xmlns:clientUpdateBranch="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
               xmlns:clientDeleteBranch="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
+              xmlns:clientGetStaff="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
              xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,6 +31,9 @@
 		</schema>
                  <schema xmlns="http://www.w3.org/2001/XMLSchema">
 			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch" schemaLocation="../Schemas/deleteBranch.xsd" />
+		</schema>
+                <schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff" schemaLocation="../Schemas/getStaff.xsd" />
 		</schema>
 	</wsdl:types>
 
@@ -74,6 +78,10 @@
    <wsdl:input message="client:deleteBranchRequest"/>
    <wsdl:output message="client:deleteBranchResponse"/>
   </wsdl:operation>
+  <wsdl:operation name="getStaff">
+   <wsdl:input message="client:getStaffRequest"/>
+   <wsdl:output message="client:getStaffResponse"/>
+  </wsdl:operation>
  </wsdl:portType>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,5 +101,11 @@
  </wsdl:message>
  <wsdl:message name="deleteBranchResponse">
   <wsdl:part name="payload" element="clientDeleteBranch:UpdateResponse"/>
+ </wsdl:message>
+ <wsdl:message name="getStaffRequest">
+  <wsdl:part name="payload" element="clientGetStaff:Body"/>
+ </wsdl:message>
+ <wsdl:message name="getStaffResponse">
+  <wsdl:part name="payload" element="clientGetStaff:UpdateResponse"/>
  </wsdl:message>
 </wsdl:definitions>

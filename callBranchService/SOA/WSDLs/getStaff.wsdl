@@ -1,0 +1,31 @@
+<wsdl:definitions
+     name="getStaff"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="getStaff_plt" >
+    <plt:role name="getStaff_role" >
+      <plt:portType name="tns:getStaff_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff" schemaLocation="../Schemas/getStaff.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="Body_msg_in">
+        <wsdl:part name="Body" element="msg_in_out:Body"/>
+    </wsdl:message>
+    <wsdl:message name="UpdateResponse_msg_out">
+        <wsdl:part name="UpdateResponse" element="msg_in_out:UpdateResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="getStaff_ptt">
+        <wsdl:operation name="getStaff">
+            <wsdl:input message="tns:Body_msg_in"/>
+            <wsdl:output message="tns:UpdateResponse_msg_out"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
