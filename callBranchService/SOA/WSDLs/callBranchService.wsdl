@@ -6,6 +6,7 @@
              xmlns:clientAddBranch="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
              xmlns:clientGetBranchDetail="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
               xmlns:clientUpdateBranch="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
+              xmlns:clientDeleteBranch="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
              xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -26,6 +27,9 @@
 		</schema>
                 <schema xmlns="http://www.w3.org/2001/XMLSchema">
 			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch" schemaLocation="../Schemas/updateBranch.xsd" />
+		</schema>
+                 <schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch" schemaLocation="../Schemas/deleteBranch.xsd" />
 		</schema>
 	</wsdl:types>
 
@@ -66,6 +70,10 @@
    <wsdl:input message="client:updateBranchRequest"/>
    <wsdl:output message="client:updateBranchResponse"/>
   </wsdl:operation>
+  <wsdl:operation name="deleteBranch">
+   <wsdl:input message="client:deleteBranchRequest"/>
+   <wsdl:output message="client:deleteBranchResponse"/>
+  </wsdl:operation>
  </wsdl:portType>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -74,10 +82,16 @@
 	<plnk:partnerLinkType name="callBranchService">
 		<plnk:role name="callBranchServiceProvider" portType="client:callBranchService"/>
 	</plnk:partnerLinkType>
- <wsdl:message name="updateBranchRequest">
-  <wsdl:part name="payload" element="clientUpdateBranch:Body"/>
+         <wsdl:message name="updateBranchRequest">
+              <wsdl:part name="payload" element="clientUpdateBranch:Body"/>
+         </wsdl:message>
+         <wsdl:message name="updateBranchResponse">
+              <wsdl:part name="payload" element="clientUpdateBranch:UpdateResponse"/>
+         </wsdl:message>
+         <wsdl:message name="deleteBranchRequest">
+  <wsdl:part name="payload" element="clientDeleteBranch:Body"/>
  </wsdl:message>
- <wsdl:message name="updateBranchResponse">
-  <wsdl:part name="payload" element="clientUpdateBranch:UpdateResponse"/>
+ <wsdl:message name="deleteBranchResponse">
+  <wsdl:part name="payload" element="clientDeleteBranch:UpdateResponse"/>
  </wsdl:message>
 </wsdl:definitions>

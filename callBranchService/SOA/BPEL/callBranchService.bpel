@@ -22,7 +22,9 @@
          xmlns:ns3="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
          xmlns:ns4="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
          xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/updateBranch"
-         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch">
+         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
+         xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/deleteBranch"
+         xmlns:ns8="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService" location="../WSDLs/callBranchService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -41,6 +43,7 @@
     <partnerLink name="addBranch" partnerLinkType="ns1:addBranch_plt" partnerRole="addBranch_role"/>
     <partnerLink name="getBranchDetail" partnerLinkType="ns2:getBranchDetail_plt" partnerRole="getBranchDetail_role"/>
     <partnerLink name="updateBranch" partnerLinkType="ns5:updateBranch_plt" partnerRole="updateBranch_role"/>
+    <partnerLink name="deleteBranch" partnerLinkType="ns7:deleteBranch_plt" partnerRole="deleteBranch_role"/>
   </partnerLinks>
 
   <!-- 
@@ -62,6 +65,10 @@
     <variable name="CallUpdateBranch_InputVariable" messageType="ns5:Body_msg_in"/>
     <variable name="CallUpdateBranch_OutputVariable" messageType="ns5:UpdateResponse_msg_out"/>
     <variable name="Reply_updateBranch" messageType="client:updateBranchResponse"/>
+    <variable name="OnMessage_deleteBranch_InputVariable" messageType="client:deleteBranchRequest"/>
+    <variable name="CallDeleteBranch_InputVariable" messageType="ns7:Body_msg_in"/>
+    <variable name="CallDeleteBranch_OutputVariable" messageType="ns7:UpdateResponse_msg_out"/>
+    <variable name="Reply_deleteBranch" messageType="client:deleteBranchResponse"/>
   </variables>
 
   <!-- 
@@ -141,6 +148,30 @@
         </assign>
         <reply name="Reply1" partnerLink="callbranchservice_client" variable="Reply_updateBranch"
                portType="client:callBranchService" operation="updateBranch"/>
+      </sequence>
+    </onMessage>
+    <onMessage bpelx:name="deleteBranch" partnerLink="callbranchservice_client"
+               variable="OnMessage_deleteBranch_InputVariable" portType="client:callBranchService"
+               operation="deleteBranch">
+      <sequence name="Sequence4">
+        <assign name="SetupDeleteBranch">
+          <copy>
+            <from>$OnMessage_deleteBranch_InputVariable.payload</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallDeleteBranch_InputVariable.Body</to>
+          </copy>
+        </assign>
+        <invoke name="CallDeleteBranch" partnerLink="deleteBranch"
+                portType="ns7:deleteBranch_ptt" operation="deleteBranch"
+                inputVariable="CallDeleteBranch_InputVariable" outputVariable="CallDeleteBranch_OutputVariable"
+                bpelx:invokeAsDetail="no"/>
+        <assign name="OutputDeleteBranch">
+          <copy>
+            <from>$CallDeleteBranch_OutputVariable.UpdateResponse</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Reply_deleteBranch.payload</to>
+          </copy>
+        </assign>
+        <reply name="ReplyDeleteBranch" partnerLink="callbranchservice_client" variable="Reply_deleteBranch"
+               portType="client:callBranchService" operation="deleteBranch"/>
       </sequence>
     </onMessage>
   </pick>
