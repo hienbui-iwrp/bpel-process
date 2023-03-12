@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="callAccountService"
+             targetNamespace="http://xmlns.oracle.com/bpel_process/callAccountService/callAccountService"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:client="http://xmlns.oracle.com/bpel_process/callAccountService/callAccountService"
+             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	TYPE DEFINITION - List of services participating in this BPEL process
+	The default output of the BPEL designer uses strings as input and 
+	output to the BPEL Process. But you can define or import any XML 
+	Schema type and use them as part of the message types.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->   
+	<wsdl:types>
+		<schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/bpel_process/callAccountService/callAccountService" schemaLocation="../Schemas/callAccountService.xsd" />
+		</schema>
+                <schema xmlns="http://www.w3.org/2001/XMLSchema">
+			<import namespace="http://xmlns.oracle.com/bpel_process/callAccountService/signUp" schemaLocation="../Schemas/signUp.xsd" />
+		</schema>
+	</wsdl:types>
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MESSAGE TYPE DEFINITION - Definition of the message types used as 
+	part of the port type defintions
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	PORT TYPE DEFINITION - A port type groups a set of operations into
+	a logical service unit.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<!-- portType implemented by the callAccountService BPEL process -->
+
+	<!-- portType implemented by the requester of callAccountService BPEL process
+	for asynchronous callback purposes
+	-->
+
+	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	PARTNER LINK TYPE DEFINITION
+	the callAccountService partnerLinkType binds the provider and
+	requester portType into an asynchronous conversation.
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<plnk:partnerLinkType name="callAccountService">
+		<plnk:role name="callAccountServiceProvider" portType="client:callAccountService"/>
+		<plnk:role name="callAccountServiceRequester" portType="client:callAccountServiceCallback"/>
+	</plnk:partnerLinkType>
+ <wsdl:message name="signUpRequest"/>
+</wsdl:definitions>

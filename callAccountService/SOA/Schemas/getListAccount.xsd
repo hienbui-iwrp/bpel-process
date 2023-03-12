@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org"
+            targetNamespace="http://xmlns.oracle.com/bpel_process/callAccountService/getListAccount"
+            elementFormDefault="qualified">
+  <xsd:element name="Body" type="xsd:string"/>
+  <xsd:element name="GetResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="StatusCode" type="xsd:integer"/>
+        <xsd:element name="Message" type="xsd:string"/>
+        <xsd:element name="Data" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="Role" type="xsd:int"/>
+              <xsd:element name="Username" type="xsd:string"/>
+              <xsd:element name="IsActivated" type="xsd:boolean"/>
+              <xsd:element name="CreatedAt" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
