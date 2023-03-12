@@ -1,111 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wsdl:definitions name="callBranchService"
-             targetNamespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
-             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
-             xmlns:client="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
-             xmlns:clientAddBranch="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
-             xmlns:clientGetBranchDetail="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
-              xmlns:clientUpdateBranch="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
-              xmlns:clientDeleteBranch="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
-              xmlns:clientGetStaff="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
-             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
-
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                  targetNamespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:client="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
+                  xmlns:clientAddBranch="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
+                  xmlns:clientGetBranchDetail="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
+                  xmlns:clientUpdateBranch="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
+                  xmlns:clientDeleteBranch="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
+                  xmlns:clientGetStaff="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
+                  xmlns:clientAllBranch="http://xmlns.oracle.com/bpel_process/callBranchService/getAllBranch"
+                  xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	TYPE DEFINITION - List of services participating in this BPEL process
 	The default output of the BPEL designer uses strings as input and 
 	output to the BPEL Process. But you can define or import any XML 
 	Schema type and use them as part of the message types.
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->   
-	<wsdl:types>
-		<schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService" schemaLocation="../Schemas/callBranchService.xsd" />
-		</schema>
-                <schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch" schemaLocation="../Schemas/addBranch.xsd" />
-		</schema>
-                <schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail" schemaLocation="../Schemas/getBranchDetail.xsd" />
-		</schema>
-                <schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch" schemaLocation="../Schemas/updateBranch.xsd" />
-		</schema>
-                 <schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch" schemaLocation="../Schemas/deleteBranch.xsd" />
-		</schema>
-                <schema xmlns="http://www.w3.org/2001/XMLSchema">
-			<import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff" schemaLocation="../Schemas/getStaff.xsd" />
-		</schema>
-	</wsdl:types>
-
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService"
+              schemaLocation="../Schemas/callBranchService.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/addBranch"
+              schemaLocation="../Schemas/addBranch.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getBranchDetail"
+              schemaLocation="../Schemas/getBranchDetail.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/updateBranch"
+              schemaLocation="../Schemas/updateBranch.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
+              schemaLocation="../Schemas/deleteBranch.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
+              schemaLocation="../Schemas/getStaff.xsd"/>
+    </schema>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://xmlns.oracle.com/bpel_process/callBranchService/getAllBranch"
+              schemaLocation="../Schemas/getAllBranch.xsd"/>
+    </schema>
+  </wsdl:types>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	MESSAGE TYPE DEFINITION - Definition of the message types used as 
 	part of the port type defintions
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->      
-	<wsdl:message name="getBranchDetailRequest">
-              <wsdl:part name="payload" element="clientGetBranchDetail:Body"/>
-         </wsdl:message>
-          <wsdl:message name="getBranchDetailResponse">
-              <wsdl:part name="payload" element="clientGetBranchDetail:GetResponse"/>
-         </wsdl:message>
-         
-         <wsdl:message name="addBranchRequest">
-              <wsdl:part name="payload" element="clientAddBranch:Body"/>
-          </wsdl:message>
-         <wsdl:message name="addBranchResponse">
-              <wsdl:part name="payload" element="clientAddBranch:UpdateResponse"/>
-         </wsdl:message>
-
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <wsdl:message name="getBranchDetailRequest">
+    <wsdl:part name="payload" element="clientGetBranchDetail:Body"/>
+  </wsdl:message>
+  <wsdl:message name="getBranchDetailResponse">
+    <wsdl:part name="payload" element="clientGetBranchDetail:GetResponse"/>
+  </wsdl:message>
+  <wsdl:message name="addBranchRequest">
+    <wsdl:part name="payload" element="clientAddBranch:Body"/>
+  </wsdl:message>
+  <wsdl:message name="addBranchResponse">
+    <wsdl:part name="payload" element="clientAddBranch:UpdateResponse"/>
+  </wsdl:message>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	PORT TYPE DEFINITION - A port type groups a set of operations into
 	a logical service unit.
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-
-	<!-- portType implemented by the callBranchService BPEL process -->
-	<wsdl:portType name="callBranchService">
-              <wsdl:operation name="getBranchDetail">
-                       <wsdl:input message="client:getBranchDetailRequest"/>
-                       <wsdl:output message="client:getBranchDetailResponse"/>
-              </wsdl:operation>
-              <wsdl:operation name="addBranch">
-                     <wsdl:input message="client:addBranchRequest"/>
-                     <wsdl:output message="client:addBranchResponse"/>
-              </wsdl:operation>
-  <wsdl:operation name="updateBranch">
-   <wsdl:input message="client:updateBranchRequest"/>
-   <wsdl:output message="client:updateBranchResponse"/>
-  </wsdl:operation>
-  <wsdl:operation name="deleteBranch">
-   <wsdl:input message="client:deleteBranchRequest"/>
-   <wsdl:output message="client:deleteBranchResponse"/>
-  </wsdl:operation>
-  <wsdl:operation name="getStaff">
-   <wsdl:input message="client:getStaffRequest"/>
-   <wsdl:output message="client:getStaffResponse"/>
-  </wsdl:operation>
- </wsdl:portType>
-
-	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  <!-- portType implemented by the callBranchService BPEL process -->
+  <wsdl:portType name="callBranchService">
+    <wsdl:operation name="getBranchDetail">
+      <wsdl:input message="client:getBranchDetailRequest"/>
+      <wsdl:output message="client:getBranchDetailResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="addBranch">
+      <wsdl:input message="client:addBranchRequest"/>
+      <wsdl:output message="client:addBranchResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="updateBranch">
+      <wsdl:input message="client:updateBranchRequest"/>
+      <wsdl:output message="client:updateBranchResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="deleteBranch">
+      <wsdl:input message="client:deleteBranchRequest"/>
+      <wsdl:output message="client:deleteBranchResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getStaff">
+      <wsdl:input message="client:getStaffRequest"/>
+      <wsdl:output message="client:getStaffResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="getAllBranch">
+      <wsdl:input message="client:getAllBranchRequest"/>
+      <wsdl:output message="client:getAllBranchResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	PARTNER LINK TYPE DEFINITION
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
-	<plnk:partnerLinkType name="callBranchService">
-		<plnk:role name="callBranchServiceProvider" portType="client:callBranchService"/>
-	</plnk:partnerLinkType>
-         <wsdl:message name="updateBranchRequest">
-              <wsdl:part name="payload" element="clientUpdateBranch:Body"/>
-         </wsdl:message>
-         <wsdl:message name="updateBranchResponse">
-              <wsdl:part name="payload" element="clientUpdateBranch:UpdateResponse"/>
-         </wsdl:message>
-         <wsdl:message name="deleteBranchRequest">
-  <wsdl:part name="payload" element="clientDeleteBranch:Body"/>
- </wsdl:message>
- <wsdl:message name="deleteBranchResponse">
-  <wsdl:part name="payload" element="clientDeleteBranch:UpdateResponse"/>
- </wsdl:message>
- <wsdl:message name="getStaffRequest">
-  <wsdl:part name="payload" element="clientGetStaff:Body"/>
- </wsdl:message>
- <wsdl:message name="getStaffResponse">
-  <wsdl:part name="payload" element="clientGetStaff:UpdateResponse"/>
- </wsdl:message>
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+  <plnk:partnerLinkType name="callBranchService">
+    <plnk:role name="callBranchServiceProvider" portType="client:callBranchService"/>
+  </plnk:partnerLinkType>
+  <wsdl:message name="updateBranchRequest">
+    <wsdl:part name="payload" element="clientUpdateBranch:Body"/>
+  </wsdl:message>
+  <wsdl:message name="updateBranchResponse">
+    <wsdl:part name="payload" element="clientUpdateBranch:UpdateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="deleteBranchRequest">
+    <wsdl:part name="payload" element="clientDeleteBranch:Body"/>
+  </wsdl:message>
+  <wsdl:message name="deleteBranchResponse">
+    <wsdl:part name="payload" element="clientDeleteBranch:UpdateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getStaffRequest">
+    <wsdl:part name="payload" element="clientGetStaff:Body"/>
+  </wsdl:message>
+  <wsdl:message name="getStaffResponse">
+    <wsdl:part name="payload" element="clientGetStaff:UpdateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="getAllBranchRequest">
+    <wsdl:part name="payload" element="clientAllBranch:Body"/>
+  </wsdl:message>
+  <wsdl:message name="getAllBranchResponse">
+    <wsdl:part name="payload" element="clientAllBranch:GetResponse"/>
+  </wsdl:message>
 </wsdl:definitions>

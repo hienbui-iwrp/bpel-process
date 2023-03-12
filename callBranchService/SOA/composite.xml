@@ -23,6 +23,8 @@
           location="WSDLs/deleteBranch.wsdl" importType="wsdl"/>
   <import namespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff"
           location="WSDLs/getStaff.wsdl" importType="wsdl"/>
+  <import namespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getAllBranch"
+          location="WSDLs/getAllBranch.wsdl" importType="wsdl"/>
   <service name="callbranchservice_client_ep" ui:wsdlLocation="WSDLs/callBranchService.wsdl">
     <interface.wsdl interface="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService#wsdl.interface(callBranchService)"/>
     <binding.ws port="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService#wsdl.endpoint(callbranchservice_client_ep/callBranchService_pt)"/>
@@ -49,6 +51,9 @@
       </reference>
       <reference name="getStaff" ui:wsdlLocation="WSDLs/getStaff.wsdl">
         <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff#wsdl.interface(getStaff_ptt)"/>
+      </reference>
+      <reference name="getAllBranch" ui:wsdlLocation="WSDLs/getAllBranch.wsdl">
+        <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getAllBranch#wsdl.interface(getAllBranch_ptt)"/>
       </reference>
     </componentType>
     <property name="bpel.config.transaction" type="xs:string" many="false">required</property>
@@ -98,6 +103,15 @@
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
+  <reference name="getAllBranch" ui:wsdlLocation="WSDLs/getAllBranch.wsdl">
+    <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getAllBranch#wsdl.interface(getAllBranch_ptt)"/>
+    <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getAllBranch#wsdl.endpoint(getAllBranch/getAllBranch_pt)"
+                location="WSDLs/getAllBranch.wsdl" supports="http">
+      <property name="http.verb" type="xs:string" many="false">POST</property>
+      <property name="endpointURI" type="xs:string" many="false">http://localhost:10000/api/bff/branch-service/get-all</property>
+      <property name="http.payload" type="xs:string" many="false">xml</property>
+    </binding.ws>
+  </reference>
   <wire>
     <source.uri>callbranchservice_client_ep</source.uri>
     <target.uri>callBranchService/callbranchservice_client</target.uri>
@@ -121,5 +135,9 @@
   <wire>
     <source.uri>callBranchService/getStaff</source.uri>
     <target.uri>getStaff</target.uri>
+  </wire>
+  <wire>
+    <source.uri>callBranchService/getAllBranch</source.uri>
+    <target.uri>getAllBranch</target.uri>
   </wire>
 </composite>

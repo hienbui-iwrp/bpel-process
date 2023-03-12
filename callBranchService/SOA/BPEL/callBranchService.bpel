@@ -26,7 +26,9 @@
          xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/deleteBranch"
          xmlns:ns8="http://xmlns.oracle.com/bpel_process/callBranchService/deleteBranch"
          xmlns:ns9="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getStaff"
-         xmlns:ns10="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff">
+         xmlns:ns10="http://xmlns.oracle.com/bpel_process/callBranchService/getStaff"
+         xmlns:ns11="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callBranchService/getAllBranch"
+         xmlns:ns12="http://xmlns.oracle.com/bpel_process/callBranchService/getAllBranch">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callBranchService/callBranchService" location="../WSDLs/callBranchService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -47,6 +49,7 @@
     <partnerLink name="updateBranch" partnerLinkType="ns5:updateBranch_plt" partnerRole="updateBranch_role"/>
     <partnerLink name="deleteBranch" partnerLinkType="ns7:deleteBranch_plt" partnerRole="deleteBranch_role"/>
     <partnerLink name="getStaff" partnerLinkType="ns9:getStaff_plt" partnerRole="getStaff_role"/>
+    <partnerLink name="getAllBranch" partnerLinkType="ns11:getAllBranch_plt" partnerRole="getAllBranch_role"/>
   </partnerLinks>
 
   <!-- 
@@ -76,6 +79,10 @@
     <variable name="CallGetStaff_InputVariable" messageType="ns9:Body_msg_in"/>
     <variable name="CallGetStaff_OutputVariable" messageType="ns9:UpdateResponse_msg_out"/>
     <variable name="Reply_GetStaff" messageType="client:getStaffResponse"/>
+    <variable name="OnMessage_getAllBranch_InputVariable" messageType="client:getAllBranchRequest"/>
+    <variable name="CallGetAllBranch_InputVariable" messageType="ns11:Body_msg_in"/>
+    <variable name="CallGetAllBranch_OutputVariable" messageType="ns11:GetResponse_msg_out"/>
+    <variable name="Reply_GetAllBranch" messageType="client:getAllBranchResponse"/>
   </variables>
 
   <!-- 
@@ -201,6 +208,30 @@
         </assign>
         <reply name="ReplyGetStaff" partnerLink="callbranchservice_client" variable="Reply_GetStaff"
                portType="client:callBranchService" operation="getStaff"/>
+      </sequence>
+    </onMessage>
+    <onMessage bpelx:name="getAllBranch" partnerLink="callbranchservice_client"
+               variable="OnMessage_getAllBranch_InputVariable" portType="client:callBranchService"
+               operation="getAllBranch">
+      <sequence name="Sequence6">
+        <assign name="SetupGetAllBranch">
+          <copy>
+            <from>$OnMessage_getAllBranch_InputVariable.payload</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallGetAllBranch_InputVariable.Body</to>
+          </copy>
+        </assign>
+        <invoke name="CallGetAllBranch" partnerLink="getAllBranch"
+                portType="ns11:getAllBranch_ptt" operation="getAllBranch"
+                inputVariable="CallGetAllBranch_InputVariable" outputVariable="CallGetAllBranch_OutputVariable"
+                bpelx:invokeAsDetail="no"/>
+        <assign name="OutputGetAllBranch">
+          <copy>
+            <from>$CallGetAllBranch_OutputVariable.GetResponse</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Reply_GetAllBranch.payload</to>
+          </copy>
+        </assign>
+        <reply name="ReplyGetAllBranch" partnerLink="callbranchservice_client" variable="Reply_GetAllBranch"
+               portType="client:callBranchService" operation="getAllBranch"/>
       </sequence>
     </onMessage>
   </pick>
