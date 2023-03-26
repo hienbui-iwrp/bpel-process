@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callAccountService/signIn"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callAccountService/signIn"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callAccountService/signIn"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callAccountService/signIn"
     >
   <plt:partnerLinkType name="signIn_plt" >
     <plt:role name="signIn_role" >

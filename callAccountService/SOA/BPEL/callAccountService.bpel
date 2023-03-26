@@ -21,7 +21,8 @@
          xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callAccountService/updateRole"
          xmlns:ns4="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callAccountService/addAccount"
          xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callAccountService/signIn"
-         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callAccountService/updateRole">
+         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callAccountService/updateRole"
+         xmlns:ns7="http://xmlns.oracle.com/bpel_process/callAccountService/signIn">
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callAccountService/callAccountService"
           location="../WSDLs/callAccountService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -57,7 +58,6 @@
     <variable name="signUp_outputVariable" messageType="ns1:UpdateResponse_msg_out"/>
     <variable name="Reply_signUp" messageType="client:signUp_response"/>
     <variable name="OnMessage_signIn" messageType="client:signIn_request"/>
-    <variable name="CallSignIn_InputVariable" messageType="ns5:Body_msg_in"/>
     <variable name="signIn_InputVariable" messageType="ns5:Body_msg_in"/>
     <variable name="signIn_OutputVariable" messageType="ns5:GetResponse_msg_out"/>
     <variable name="Reply_signIn" messageType="client:signIn_response"/>
@@ -109,7 +109,7 @@
         <assign name="setup">
           <copy>
             <from>$OnMessage_signIn.payload</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$CallSignIn_InputVariable.Body</to>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$signIn_InputVariable.Body</to>
           </copy>
         </assign>
         <invoke name="CallSignIn" partnerLink="signIn" portType="ns5:signIn_ptt" operation="signIn"
