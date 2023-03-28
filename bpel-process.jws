@@ -29,5 +29,6 @@
    <list n="listOfChildren">
       <hash><url n="URL" path="callAccountService/callAccountService.jpr"/></hash>
       <hash><url n="URL" path="callBranchService/callBranchService.jpr"/></hash>
+      <hash><url n="URL" path="callOrderService/callOrderService.jpr"/></hash>
    </list>
 </jws:workspace>
