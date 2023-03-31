@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+        targetNamespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/BPELProcess1"
+        xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="Body">
+    <complexType>
+      <sequence>
+        <element name="CustomerId" type="string"/>
+        <element name="PaymentMethod" type="string"/>
+        <element name="TotalPrice" type="int"/>
+        <element name="ShipFee" type="int"/>
+        <element name="TransactionDate" type="string"/>
+        <element name="NameReceiver" type="string"/>
+        <element name="PhoneReceiver" type="string"/>
+        <element name="EmailReceiver" type="string"/>
+        <element name="ListElements" type="anyType"/>
+        <!--<element name="ListElements">
+          <complexType>
+            <sequence>
+              <element name="Elements" minOccurs="0" maxOccurs="unbounded">
+                <complexType>
+                  <sequence>
+                    <element name="GoodsCode" type="string"/>
+                    <element name="GoodsColor" type="string"/>
+                    <element name="GoodsSize" type="string"/>
+                    <element name="Quantity" type="int"/>
+                  </sequence>
+                </complexType>
+              </element>
+            </sequence>
+          </complexType>
+        </element>-->
+        <element name="Address">
+          <complexType>
+            <sequence>
+              <element name="Province" type="string"/>
+              <element name="District" type="string"/>
+              <element name="Ward" type="string"/>
+              <element name="Street" type="string"/>
+            </sequence>
+          </complexType>
+        </element>
+        <element name="ExpectedDate" type="string"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="processResponse" type="anyType">
+    <!--<complexType>
+      <sequence>
+        <element name="result" type="string"/>
+      </sequence>
+    </complexType>-->
+  </element>
+</schema>

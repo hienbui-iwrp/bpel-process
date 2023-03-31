@@ -1,10 +1,10 @@
 <wsdl:definitions
-     name="httpReference"
-     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callOrderService/httpReference"
-     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callOrderService/httpReference"
+     name="getShipFee"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/getShipFee"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/getShipFee"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://www.example.org"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callNewOrderService/getShipFee"
     >
   <plt:partnerLinkType name="Request_Response_plt" >
     <plt:role name="Request-Response_role" >
@@ -13,7 +13,7 @@
   </plt:partnerLinkType>
     <wsdl:types>
       <schema xmlns="http://www.w3.org/2001/XMLSchema" >
-        <import namespace="http://www.example.org" schemaLocation="../Schemas/getShipFee.xsd" />
+        <import namespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/getShipFee" schemaLocation="../Schemas/getShipFee.xsd" />
       </schema>
     </wsdl:types>
     <wsdl:message name="Body_msg_in">

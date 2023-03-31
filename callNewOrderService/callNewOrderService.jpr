@@ -74,7 +74,7 @@
       <string v="oracle.sb.tooling.ide.core.projects.SbProjectSettings/sbContentSet"/>
       <string v="oracle.tip.tools.ide.ess.addin.ESSContentSetProvider/ess-content"/>
    </list>
-   <value n="defaultPackage" v="callorderservice"/>
+   <value n="defaultPackage" v="callneworderservice"/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
          <string v="SOA"/>
@@ -114,7 +114,7 @@
    </hash>
    <hash n="oracle.jdeveloper.deploy.dt.DeploymentProfiles">
       <hash n="profileDefinitions">
-         <hash n="callOrderService">
+         <hash n="callNewOrderService">
             <hash n="archiveOptions">
                <value n="hasManifest" v="false"/>
             </hash>
@@ -201,18 +201,18 @@
                   </hash>
                </list>
             </hash>
-            <url n="jarURL" path="deploy/sca_callOrderService.jar"/>
+            <url n="jarURL" path="deploy/sca_callNewOrderService.jar"/>
             <value n="profileClass" v="oracle.tip.tools.ide.fabric.deploy.sar.SarProfile"/>
-            <value n="profileName" v="callOrderService"/>
+            <value n="profileName" v="callNewOrderService"/>
          </hash>
       </hash>
       <list n="profileList">
-         <string v="callOrderService"/>
+         <string v="callNewOrderService"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
-      <value n="j2eeWebAppName" v="bpel-process-callOrderService-webapp"/>
-      <value n="j2eeWebContextRoot" v="bpel-process-callOrderService-context-root"/>
+      <value n="j2eeWebAppName" v="bpel-process-callNewOrderService-webapp"/>
+      <value n="j2eeWebContextRoot" v="bpel-process-callNewOrderService-context-root"/>
    </hash>
    <hash n="oracle.jdeveloper.model.PathsConfiguration">
       <hash n="javaContentSet">

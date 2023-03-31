@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="windows-1258" ?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org"
+            targetNamespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/checkWarehouse"
+            elementFormDefault="qualified">
+  <xsd:element name="Body" type="xsd:anyType">
+    <!--<xsd:complexType>
+      <xsd:sequence>
+        --><!--<xsd:element name="ListElements" />--><!--
+        <element name="ListElements" type="anyType"/>
+        <xsd:element name="Elements" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="GoodsCode" type="xsd:string"/>
+              <xsd:element name="GoodsColor" type="xsd:string"/>
+              <xsd:element name="GoodsSize" type="xsd:string"/>
+              <xsd:element name="Quantity" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+        --><!--<xsd:element name="ListElements">
+          <xsd:complexType>
+            <xsd:choice>
+              <xsd:element name="Elements" minOccurs="0" maxOccurs="unbounded">
+                <xsd:complexType>
+                  <xsd:sequence>
+                    <xsd:element name="GoodsCode" type="xsd:string"/>
+                    <xsd:element name="GoodsColor" type="xsd:string"/>
+                    <xsd:element name="GoodsSize" type="xsd:string"/>
+                    <xsd:element name="Quantity" type="xsd:string"/>
+                  </xsd:sequence>
+                </xsd:complexType>
+              </xsd:element>
+            </xsd:choice>
+          </xsd:complexType>
+        </xsd:element>--><!--
+      </xsd:sequence>
+    </xsd:complexType>-->
+  </xsd:element>
+  <xsd:element name="GetResponse">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="NeedTransfer" type="xsd:string"/>
+        <!--<xsd:element name="WarehouseActions" type="xsd:anyType" minOccurs="0" maxOccurs="unbounded"/>-->
+        <xsd:element name="WarehouseAction" minOccurs="0" maxOccurs="unbounded">
+          <xsd:complexType>
+            <xsd:sequence>
+              <xsd:element name="GoodsCode" type="xsd:string"/>
+              <xsd:element name="GoodsColor" type="xsd:string"/>
+              <xsd:element name="GoodsSize" type="xsd:string"/>
+              <xsd:element name="Quantity" type="xsd:int"/>
+              <xsd:element name="From" type="xsd:string"/>
+              <xsd:element name="To" type="xsd:string"/>
+            </xsd:sequence>
+          </xsd:complexType>
+        </xsd:element>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+</xsd:schema>
