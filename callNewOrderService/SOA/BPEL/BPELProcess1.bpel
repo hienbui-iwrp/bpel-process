@@ -29,7 +29,7 @@
          xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
-         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/BPELProcess1"
           location="../WSDLs/BPELProcess1.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -64,6 +64,7 @@
     <variable name="Output_ShipFee" messageType="ns1:GetResponse_msg_out"/>
     <variable name="Input_CheckWh" messageType="ns3:Body_msg_in"/>
     <variable name="Output_CheckWh" messageType="ns3:GetResponse_msg_out"/>
+    <variable name="NeedTransfer" type="xsd:string" bpelx:sdoCapable="true"/>
   </variables>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,17 +86,54 @@
     <invoke name="InvokeCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns3:Request_Response_ptt" operation="Request-Response" inputVariable="Input_CheckWh"
             outputVariable="Output_CheckWh"/>
-    <assign name="Assign5">
+    <assign name="Init">
+      <copy>
+        <from>"init"</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer</to>
+      </copy>
+    </assign>
+    <assign name="AssignOutputNeedTransfer">
+      <copy>
+        <from>$Output_CheckWh.GetResponse/ns5:Message</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer</to>
+      </copy>
+    </assign>
+    <assign name="AssignNeedToReply">
+      <copy>
+        <from>$NeedTransfer</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
+      </copy>
+    </assign>
+    <!--<assign name="Assign5">
       <copy>
         <from>$Output_CheckWh.GetResponse</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
       </copy>
-    </assign>
+    </assign>-->
+    <!--<assign name="AssignOutputCheckWh">
+      <copy>
+        <from>$Output_CheckWh.GetResponse</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
+      </copy>
+    </assign>-->
     <if name="If1">
-      <condition>xp20:compare($Output_CheckWh.GetResponse/ns5:NeedTransfer, "true")</condition>
-      <else></else>
+      <condition expressionLanguage="javascript">process.Output_CheckWh.GetResponse.ns5::Data.ns5::NeedTransfer=='true'</condition>
+      <assign name="Assign7">
+        <copy>
+          <from>$inputVariable.payload/client:ListElements</from>
+          <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_CheckWh.Body</to>
+        </copy>
+      </assign>
+      <else>
+        <assign name="Assign8">
+          <copy>
+            <from>$outputVariable.payload</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_CheckWh.Body</to>
+          </copy>
+        </assign>
+      </else>
     </if>
-    <assign name="Assign3">
+    <!--<assign name="Assign3">
       <copy>
         <from>$inputVariable.payload/client:Address/client:Province</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_ShipFee.Body/ns2:Province</to>
@@ -120,7 +158,7 @@
         <from>$Output_ShipFee.GetResponse</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
       </copy>
-    </assign>
+    </assign>-->
     <!-- Generate reply to synchronous request -->
     <reply name="replyOutput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process"
            variable="outputVariable"/>
