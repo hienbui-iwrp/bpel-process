@@ -36,32 +36,7 @@
       </xsd:sequence>
     </xsd:complexType>-->
   </xsd:element>
-  <xsd:element name="GetResponse">
-    <xsd:complexType>
-      <xsd:sequence>
-        <!--<xsd:element name="WarehouseActions" type="xsd:anyType" minOccurs="0" maxOccurs="unbounded"/>-->
-        <xsd:element name="StatusCode" type="xsd:string"/>
-        <xsd:element name="Message" type="xsd:string"/>
-        <xsd:element name="Data">
-          <xsd:complexType>
-            <xsd:sequence>
-              <xsd:element name="NeedTransfer" type="xsd:string"/>
-              <xsd:element name="WarehouseAction" minOccurs="0" maxOccurs="unbounded">
-                <xsd:complexType>
-                  <xsd:sequence>
-                    <xsd:element name="GoodsCode" type="xsd:string"/>
-                    <xsd:element name="GoodsColor" type="xsd:string"/>
-                    <xsd:element name="GoodsSize" type="xsd:string"/>
-                    <xsd:element name="Quantity" type="xsd:int"/>
-                    <xsd:element name="From" type="xsd:string"/>
-                    <xsd:element name="To" type="xsd:string"/>
-                  </xsd:sequence>
-                </xsd:complexType>
-              </xsd:element>
-            </xsd:sequence>
-          </xsd:complexType>
-        </xsd:element>
-      </xsd:sequence>
-    </xsd:complexType>
+  <xsd:element name="GetResponse" type="xsd:anyType">
+   
   </xsd:element>
 </xsd:schema>

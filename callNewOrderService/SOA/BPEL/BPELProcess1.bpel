@@ -111,7 +111,7 @@
       </copy>
     </assign>-->
     <if name="If1">
-      <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer/ns5:Data/ns5:NeedTransfer='true'</condition>
+      <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Output_CheckWh.GetResponse/Data/NeedTransfer='true'</condition>
       <assign name="Assign7">
         <copy>
           <from>$inputVariable.payload/client:ListElements</from>
