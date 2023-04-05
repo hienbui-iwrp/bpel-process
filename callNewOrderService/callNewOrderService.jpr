@@ -236,13 +236,6 @@
          <hash n="Default">
             <value n="custom" v="false"/>
             <value n="name" v="Default"/>
-            <hash n="oracle.jdevimpl.runner.debug.DebugConfiguration">
-               <value n="remoteParameter:SOA:hostname" v="PhongTran"/>
-               <value n="remoteParameter:SOA:port" v="5004"/>
-               <value n="remoteProtocol" v="SOA"/>
-            </hash>
-            <value n="remoteDebuggingProfiling" v="true"/>
-            <url n="targetURL" path="SOA\composite.xml"/>
          </hash>
       </hash>
    </hash>

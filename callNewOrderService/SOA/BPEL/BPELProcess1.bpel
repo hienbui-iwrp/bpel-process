@@ -64,7 +64,7 @@
     <variable name="Output_ShipFee" messageType="ns1:GetResponse_msg_out"/>
     <variable name="Input_CheckWh" messageType="ns3:Body_msg_in"/>
     <variable name="Output_CheckWh" messageType="ns3:GetResponse_msg_out"/>
-    <variable name="NeedTransfer" type="xsd:string" bpelx:sdoCapable="true"/>
+    <variable name="NeedTransfer" element="ns5:GetResponse" bpelx:sdoCapable="true"/>
   </variables>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,15 +86,9 @@
     <invoke name="InvokeCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns3:Request_Response_ptt" operation="Request-Response" inputVariable="Input_CheckWh"
             outputVariable="Output_CheckWh"/>
-    <assign name="Init">
-      <copy>
-        <from>"init"</from>
-        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer</to>
-      </copy>
-    </assign>
     <assign name="AssignOutputNeedTransfer">
       <copy>
-        <from>$Output_CheckWh.GetResponse/ns5:Message</from>
+        <from>$Output_CheckWh.GetResponse</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer</to>
       </copy>
     </assign>
@@ -117,7 +111,7 @@
       </copy>
     </assign>-->
     <if name="If1">
-      <condition expressionLanguage="javascript">process.Output_CheckWh.GetResponse.ns5::Data.ns5::NeedTransfer=='true'</condition>
+      <condition expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer/ns5:Data/ns5:NeedTransfer='true'</condition>
       <assign name="Assign7">
         <copy>
           <from>$inputVariable.payload/client:ListElements</from>
