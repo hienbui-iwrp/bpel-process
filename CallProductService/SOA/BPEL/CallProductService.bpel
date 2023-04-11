@@ -1,0 +1,130 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Apr 10 22:42:40 ICT 2023
+  Author:  iwRp
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="CallProductService"
+         targetNamespace="http://xmlns.oracle.com/bpel_process/CallProductService/CallProductService"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/bpel_process/CallProductService/CallProductService"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getProductDetail"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getEventByGoods"
+         xmlns:ns3="http://xmlns.oracle.com/bpel_process/CallProductService/getProductDetail"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:ns4="http://xmlns.oracle.com/bpel_process/CallProductService/getEventByGoods"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+  <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/CallProductService/CallProductService"
+          location="../WSDLs/CallProductService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="client" partnerLinkType="client:CallProductService" myRole="CallProductServiceProvider"/>
+    <partnerLink name="getProductDetail" partnerLinkType="ns1:getProductDetail_plt"
+                 partnerRole="getProductDetail_role"/>
+    <partnerLink name="getEventByGoods" partnerLinkType="ns2:getEventByGoods_plt" partnerRole="getEventByGoods_role"/>
+  </partnerLinks>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:input"/>
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:output"/>
+    <variable name="getProductDetail_InputVariable" messageType="ns1:Body_msg_in"/>
+    <variable name="getProductDetail_OutputVariable" messageType="ns1:Response_msg_out"/>
+    <variable name="getEventByGoods_InputVariable" messageType="ns2:Body_msg_in"/>
+    <variable name="getEventByGoods_OutputVariable" messageType="ns2:Response_msg_out"/>
+  </variables>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+    <!-- Receive input from requestor. (Note: This maps to operation defined in CallProductService.wsdl) -->
+    <receive name="receiveInput" partnerLink="client" portType="client:CallProductService" operation="process"
+             variable="inputVariable" createInstance="yes"/>
+    <assign name="Setup_call">
+      <copy>
+        <from>$inputVariable.payload</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDetail_InputVariable.Body</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getEventByGoods_InputVariable.Body</to>
+      </copy>
+    </assign>
+    <flow name="Flow1">
+      <sequence name="Sequence">
+        <invoke name="Invoke_getProdcutDetail" bpelx:invokeAsDetail="no" partnerLink="getProductDetail"
+                portType="ns1:getProductDetail_ptt" operation="getProductDetail"
+                inputVariable="getProductDetail_InputVariable" outputVariable="getProductDetail_OutputVariable"/>
+        <assign name="ProductOutput">
+          <copy>
+            <from>$getProductDetail_OutputVariable.Response</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Goods</to>
+          </copy>
+        </assign>
+      </sequence>
+      <sequence name="Sequence1">
+        <invoke name="Invoke_getEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
+                portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
+                inputVariable="getEventByGoods_InputVariable" outputVariable="getEventByGoods_OutputVariable"/>
+      </sequence>
+    </flow>
+    <if name="CheckEvent">
+      <condition>$getEventByGoods_OutputVariable.Response/Data</condition>
+      <sequence>
+        <assign name="assignNewPrice">
+          <copy>
+            <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice* (1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Price</to>
+          </copy>
+          <copy>
+            <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Discount</to>
+          </copy>
+        </assign>
+        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
+               variable="outputVariable"/>
+      </sequence>
+      <else>
+        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
+               variable="outputVariable"/>
+      </else>
+    </if>
+    <!-- Generate reply to synchronous request -->
+  </sequence>
+</process>

@@ -1,0 +1,31 @@
+<wsdl:definitions
+     name="getProductDetail"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getProductDetail"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getProductDetail"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/CallProductService/getProductDetail"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="getProductDetail_plt" >
+    <plt:role name="getProductDetail_role" >
+      <plt:portType name="tns:getProductDetail_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/bpel_process/CallProductService/getProductDetail" schemaLocation="../Schemas/getlProductDetail.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="Body_msg_in">
+        <wsdl:part name="Body" element="msg_in_out:Body"/>
+    </wsdl:message>
+    <wsdl:message name="Response_msg_out">
+        <wsdl:part name="Response" element="msg_in_out:Response"/>
+    </wsdl:message>
+    <wsdl:portType name="getProductDetail_ptt">
+        <wsdl:operation name="getProductDetail">
+            <wsdl:input message="tns:Body_msg_in"/>
+            <wsdl:output message="tns:Response_msg_out"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

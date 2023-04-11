@@ -30,5 +30,6 @@
       <hash><url n="URL" path="callAccountService/callAccountService.jpr"/></hash>
       <hash><url n="URL" path="callBranchService/callBranchService.jpr"/></hash>
       <hash><url n="URL" path="callNewOrderService/callNewOrderService.jpr"/></hash>
+      <hash><url n="URL" path="CallProductService/CallProductService.jpr"/></hash>
    </list>
 </jws:workspace>
