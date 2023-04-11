@@ -16,32 +16,7 @@
    <sequence>
     <element name="StatusCode" type="string"/>
     <element name="Message" type="string"/>
-    <element name="Data">
-     <complexType>
-      <sequence>
-       <!--<element name="GoodsId" type="anyType" />
-       <element name="Name" type="string"/>
-       <element name="UnitPrice" type="int"/>
-       <element name="Price" type="string"/>
-       <element name="Images" type="anyType" minOccurs="0" maxOccurs="unbounded"/>
-       <element name="ListQuantity" type="anyType" minOccurs="0" maxOccurs="unbounded"/>
-       <element name="Discount" type="float"/>
-       <element name="GoodsType" type="string"/>
-       <element name="GoodsGender" type="string"/>
-       <element name="GoodsAge" type="string"/>
-       <element name="Description" type="string"/>-->
-       <element name="Goods" type="anyType"/>
-       <element name="Discount">
-        <complexType>
-         <sequence>
-          <element name="Discount" type="float"/>
-          <element name="Price" type="int"/>
-         </sequence>
-        </complexType>
-       </element>
-      </sequence>
-     </complexType>
-    </element>
+    <element name="Data" type="anyType"/>
    </sequence>
   </complexType>
  </element>

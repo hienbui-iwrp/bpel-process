@@ -65,6 +65,24 @@
     <variable name="getEventByGoods_InputVariable" messageType="ns2:Body_msg_in"/>
     <variable name="getEventByGoods_OutputVariable" messageType="ns2:Response_msg_out"/>
   </variables>
+  <faultHandlers>
+    <catchAll>
+      <sequence name="Sequence2">
+        <assign name="Assign1">
+          <copy>
+            <from>200</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"BPEL getProductDetail  Error"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+          </copy>
+        </assign>
+        <reply name="Reply1" partnerLink="client" variable="outputVariable" portType="client:CallProductService"
+               operation="callProductDetail"/>
+      </sequence>
+    </catchAll>
+  </faultHandlers>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ORCHESTRATION LOGIC                                               
@@ -74,7 +92,7 @@
   -->
   <sequence name="main">
     <!-- Receive input from requestor. (Note: This maps to operation defined in CallProductService.wsdl) -->
-    <receive name="receiveInput" partnerLink="client" portType="client:CallProductService" operation="process"
+    <receive name="receiveInput" partnerLink="client" portType="client:CallProductService" operation="callProductDetail"
              variable="inputVariable" createInstance="yes"/>
     <assign name="Setup_call">
       <copy>
@@ -93,8 +111,8 @@
                 inputVariable="getProductDetail_InputVariable" outputVariable="getProductDetail_OutputVariable"/>
         <assign name="ProductOutput">
           <copy>
-            <from>$getProductDetail_OutputVariable.Response</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Goods</to>
+            <from>$getProductDetail_OutputVariable.Response/Data</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data</to>
           </copy>
         </assign>
       </sequence>
@@ -109,22 +127,30 @@
       <sequence>
         <assign name="assignNewPrice">
           <copy>
-            <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice* (1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Price</to>
+            <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice*(1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Price</to>
           </copy>
           <copy>
             <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Discount</to>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Discount</to>
           </copy>
         </assign>
-        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
-               variable="outputVariable"/>
       </sequence>
       <else>
-        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
-               variable="outputVariable"/>
+        <assign name="assignOldPrice">
+         <copy>
+            <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Price</to>
+          </copy>
+          <copy>
+            <from>0</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Discount</to>
+          </copy>
+        </assign>
       </else>
     </if>
     <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="callProductDetail"
+           variable="outputVariable"/>
   </sequence>
 </process>

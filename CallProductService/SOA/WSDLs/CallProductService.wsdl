@@ -26,9 +26,10 @@
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
   <!-- portType implemented by the CallProductService BPEL process -->
   <wsdl:portType name="CallProductService">
-    <wsdl:operation name="process">
+    <wsdl:operation name="callProductDetail">
       <wsdl:input message="client:input"/>
       <wsdl:output message="client:output"/>
+      <wsdl:fault message="client:output" name="BPEL_productDetail_Error"/>
     </wsdl:operation>
   </wsdl:portType>
   <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
