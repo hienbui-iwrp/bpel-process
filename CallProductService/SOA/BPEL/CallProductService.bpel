@@ -138,7 +138,7 @@
       </sequence>
       <else>
         <assign name="assignOldPrice">
-         <copy>
+          <copy>
             <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Price</to>
           </copy>
