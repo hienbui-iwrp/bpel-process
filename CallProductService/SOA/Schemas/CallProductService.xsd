@@ -19,7 +19,7 @@
     <element name="Data">
      <complexType>
       <sequence>
-       <!--<element name="GoodsId" type="anyType" />
+       <element name="GoodsId" type="anyType" />
        <element name="Name" type="string"/>
        <element name="UnitPrice" type="int"/>
        <element name="Price" type="string"/>
@@ -29,16 +29,7 @@
        <element name="GoodsType" type="string"/>
        <element name="GoodsGender" type="string"/>
        <element name="GoodsAge" type="string"/>
-       <element name="Description" type="string"/>-->
-       <element name="Goods" type="anyType"/>
-       <element name="Discount">
-        <complexType>
-         <sequence>
-          <element name="Discount" type="float"/>
-          <element name="Price" type="int"/>
-         </sequence>
-        </complexType>
-       </element>
+       <element name="Description" type="string"/>
       </sequence>
      </complexType>
     </element>

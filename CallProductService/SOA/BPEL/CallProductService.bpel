@@ -91,12 +91,17 @@
         <invoke name="Invoke_getProdcutDetail" bpelx:invokeAsDetail="no" partnerLink="getProductDetail"
                 portType="ns1:getProductDetail_ptt" operation="getProductDetail"
                 inputVariable="getProductDetail_InputVariable" outputVariable="getProductDetail_OutputVariable"/>
-        <assign name="ProductOutput">
+        <!--<assign name="ProductOutput">
           <copy>
             <from>$getProductDetail_OutputVariable.Response</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Goods</to>
           </copy>
-        </assign>
+           <copy>
+            <from>$getProductDetail_OutputVariable.Response</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Goods</to>
+          </copy>
+        </assign>-->
+        
       </sequence>
       <sequence name="Sequence1">
         <invoke name="Invoke_getEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
@@ -109,22 +114,48 @@
       <sequence>
         <assign name="assignNewPrice">
           <copy>
+            <from>$getProductDetail_OutputVariable.Response/Data/GoodsId</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:GoodsId</to>
+          </copy>
+          <!--<copy>
+            <from>$getProductDetail_OutputVariable.Response/Data/ListQuantity[1]</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:ListQuantity</to>
+          </copy>-->
+          <copy>
             <from>$getProductDetail_OutputVariable.Response/Data/UnitPrice* (1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Price</to>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Price</to>
           </copy>
           <copy>
             <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
-            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount/client:Discount</to>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/client:Discount</to>
           </copy>
         </assign>
-        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
-               variable="outputVariable"/>
+        <!--<reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
+               variable="outputVariable"/>-->
+        <forEach parallel="no" counterName="loopCounter" name="ForEach1">
+          <startCounterValue>1</startCounterValue>
+          <finalCounterValue>count($getProductDetail_OutputVariable.Response/Data/ListQuantity)</finalCounterValue>
+          <scope name="Scope1">
+            <assign name="assignListQuantity">
+              <copy>
+                <from> $getProductDetail_OutputVariable.Response/Data/ListQuantity[$loopCounter]</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0"> $outputVariable.payload/client:Data/client:ListQuantity[$loopCounter]</to>
+              </copy>
+            </assign>
+          </scope>
+        </forEach>
       </sequence>
       <else>
-        <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
-               variable="outputVariable"/>
+        <assign name="ProductOutput">
+          <copy>
+            <from>$getProductDetail_OutputVariable.Response</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data</to>
+          </copy>
+        </assign>
       </else>
     </if>
+    <reply name="replyOutput" partnerLink="client" portType="client:CallProductService" operation="process"
+           variable="outputVariable"/>
     <!-- Generate reply to synchronous request -->
   </sequence>
 </process>
