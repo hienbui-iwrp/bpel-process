@@ -134,8 +134,17 @@
             <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Discount</to>
           </copy>
+          <copy>
+            <from>200</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"OK"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+          </copy>
         </assign>
       </sequence>
+      
       <else>
         <assign name="assignOldPrice">
           <copy>
@@ -145,6 +154,14 @@
           <copy>
             <from>0</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/Discount</to>
+          </copy>
+          <copy>
+            <from>200</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"OK"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
       </else>
