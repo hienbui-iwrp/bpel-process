@@ -16,7 +16,17 @@
          xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
          xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
          xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrder/createOrder">
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrder/createOrder"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callCreateOrder/callCreateOrder"
           location="../WSDLs/callCreateOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -50,6 +60,24 @@
     <variable name="createOrder_InputVariable" messageType="ns1:Body_msg_in"/>
     <variable name="createOrder_OutputVariable" messageType="ns1:Response_msg_out"/>
   </variables>
+  <faultHandlers>
+    <catchAll>
+      <sequence name="Sequence1">
+        <assign name="ReturnError">
+          <copy>
+            <from>500</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"Server Error"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+          </copy>
+        </assign>
+        <reply name="Reply1" partnerLink="callcreateorder_client" variable="outputVariable"
+               portType="client:callCreateOrder" operation="createOrder"/>
+      </sequence>
+    </catchAll>
+  </faultHandlers>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
      ORCHESTRATION LOGIC                                               
