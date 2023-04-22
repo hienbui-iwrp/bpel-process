@@ -61,20 +61,20 @@
       <value n="oracle.toplink.workbench.addin.migration.TopLinkProjectMigrator" v="11.1.1.1.0"/>
    </hash>
    <list n="contentSets">
-      <string v="oracle.jdeveloper.model.PathsConfiguration/javaContentSet"/>
-      <string v="oracle.ide.model.ResourcePaths/resourcesContentSet"/>
-      <string v="oracle.jdeveloper.model.J2eeSettings/webContentSet"/>
-      <string v="oracle.jdeveloper.offlinedb.model.OfflineDBProjectSettings/offlineDBContentSet"/>
       <string v="oracle.mds.internal.dt.ide.MDSLibraryCustCSProvider/mdsContentSet"/>
       <string v="oracle.mds.internal.dt.ide.MDSADFLibVirtualNodeCSProvider/mdsLibVirtualNodeContentSet"/>
-      <string v="oracle.tip.tools.ide.fabric.addin.SCAContentSetProvider/sca-content"/>
-      <string v="oracle.toplink.workbench.addin/toplinkContentSet"/>
+      <string v="oracle.jdeveloper.model.J2eeSettings/webContentSet"/>
+      <string v="oracle.jdeveloper.model.PathsConfiguration/javaContentSet"/>
+      <string v="oracle.ide.model.ResourcePaths/resourcesContentSet"/>
+      <string v="oracle.jdeveloper.offlinedb.model.OfflineDBProjectSettings/offlineDBContentSet"/>
       <string v="oracle.adfdtinternal.model.ide.settings.ADFMSettings/adfmContentSet"/>
       <string v="oracle.bm.commonIde.data.project.ModelerProjectSettings/modelersContentSet"/>
+      <string v="oracle.tip.tools.ide.fabric.addin.SCAContentSetProvider/sca-content"/>
+      <string v="oracle.toplink.workbench.addin/toplinkContentSet"/>
       <string v="oracle.sb.tooling.ide.core.projects.SbProjectSettings/sbContentSet"/>
       <string v="oracle.tip.tools.ide.ess.addin.ESSContentSetProvider/ess-content"/>
    </list>
-   <value n="defaultPackage" v="callaccountservice"/>
+   <value n="defaultPackage" v="callcreateorder"/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
          <string v="SOA"/>
@@ -114,7 +114,7 @@
    </hash>
    <hash n="oracle.jdeveloper.deploy.dt.DeploymentProfiles">
       <hash n="profileDefinitions">
-         <hash n="callAccountService">
+         <hash n="callCreateOrder">
             <hash n="archiveOptions">
                <value n="hasManifest" v="false"/>
             </hash>
@@ -201,18 +201,18 @@
                   </hash>
                </list>
             </hash>
-            <url n="jarURL" path="deploy/sca_callAccountService.jar"/>
+            <url n="jarURL" path="deploy/sca_callCreateOrder.jar"/>
             <value n="profileClass" v="oracle.tip.tools.ide.fabric.deploy.sar.SarProfile"/>
-            <value n="profileName" v="callAccountService"/>
+            <value n="profileName" v="callCreateOrder"/>
          </hash>
       </hash>
       <list n="profileList">
-         <string v="callAccountService"/>
+         <string v="callCreateOrder"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
-      <value n="j2eeWebAppName" v="bpel-process-callAccountService-webapp"/>
-      <value n="j2eeWebContextRoot" v="bpel-process-callAccountService-context-root"/>
+      <value n="j2eeWebAppName" v="bpel-process-callCreateOrder-webapp"/>
+      <value n="j2eeWebContextRoot" v="bpel-process-callCreateOrder-context-root"/>
    </hash>
    <hash n="oracle.jdeveloper.model.PathsConfiguration">
       <hash n="javaContentSet">
