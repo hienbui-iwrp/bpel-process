@@ -1,0 +1,31 @@
+<wsdl:definitions
+     name="createOrder"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/createOrder"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/createOrder"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:msg_in_out="http://www.example.org"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="createOrder_plt" >
+    <plt:role name="createOrder_role" >
+      <plt:portType name="tns:createOrder_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://www.example.org" schemaLocation="../Schemas/invokeService.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="Body_msg_in">
+        <wsdl:part name="Body" element="msg_in_out:Body"/>
+    </wsdl:message>
+    <wsdl:message name="Response_msg_out">
+        <wsdl:part name="Response" element="msg_in_out:Response"/>
+    </wsdl:message>
+    <wsdl:portType name="createOrder_ptt">
+        <wsdl:operation name="createOrder">
+            <wsdl:input message="tns:Body_msg_in"/>
+            <wsdl:output message="tns:Response_msg_out"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

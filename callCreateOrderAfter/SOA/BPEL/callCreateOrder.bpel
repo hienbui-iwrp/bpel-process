@@ -1,0 +1,166 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Apr 24 03:52:38 ICT 2023
+  Author:  iwRp
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="callCreateOrder"
+         targetNamespace="http://xmlns.oracle.com/bpel_process/callCreateOrderAfter/callCreateOrder"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/bpel_process/callCreateOrderAfter/callCreateOrder"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/checkWarehouse"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/goodsTransfer"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/createOrder"
+         xmlns:ns4="http://www.example.org"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+  <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callCreateOrderAfter/callCreateOrder"
+          location="../WSDLs/callCreateOrder.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="callcreateorder_client" partnerLinkType="client:callCreateOrder"
+                 myRole="callCreateOrderProvider"/>
+    <partnerLink name="checkWarehouse" partnerLinkType="ns1:checkWarehoouse_plt" partnerRole="checkWarehoouse_role"/>
+    <partnerLink name="goodsTransfer" partnerLinkType="ns2:goodsTransfer_plt" partnerRole="goodsTransfer_role"/>
+    <partnerLink name="createOrder" partnerLinkType="ns3:createOrder_plt" partnerRole="createOrder_role"/>
+  </partnerLinks>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:callCreateOrderRequestMessage"/>
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:callCreateOrderResponseMessage"/>
+    <variable name="authorization" type="xsd:string"/>
+    <variable name="createOrder_InputVariable" messageType="ns3:Body_msg_in"/>
+    <variable name="createOrder_OutputVariable" messageType="ns3:Response_msg_out"/>
+    <variable name="checkWarehoouse_InputVariable" messageType="ns1:Body_msg_in"/>
+    <variable name="checkWarehoouse_OutputVariable" messageType="ns1:Response_msg_out"/>
+    <variable name="needTransfer" type="xsd:boolean"/>
+    <variable name="goodsTransfer_InputVariable" messageType="ns2:Body_msg_in"/>
+    <variable name="goodsTransfer_OutputVariable" messageType="ns2:Response_msg_out"/>
+  </variables>
+  <faultHandlers>
+    <catchAll>
+      <sequence name="Sequence3">
+        <assign name="ReturnError">
+          <copy>
+            <from>500</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"Server Error"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+          </copy>
+        </assign>
+        <reply name="replyOutput" partnerLink="callcreateorder_client" portType="client:callCreateOrder"
+               operation="process" variable="outputVariable"/>
+      </sequence>
+    </catchAll>
+  </faultHandlers>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+    <!-- Receive input from requestor. (Note: This maps to operation defined in callCreateOrder.wsdl) -->
+    <receive name="receiveInput" partnerLink="callcreateorder_client" portType="client:callCreateOrder"
+             operation="process" variable="inputVariable" createInstance="yes">
+      <bpelx:fromProperties>
+        <bpelx:fromProperty name="authorization" variable="authorization"/>
+      </bpelx:fromProperties>
+    </receive>
+    <assign name="Setup">
+      <copy>
+        <from>$inputVariable.payload</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$createOrder_InputVariable.Body</to>
+      </copy>
+      <copy>
+        <from>$inputVariable.payload/client:ListElements</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$checkWarehoouse_InputVariable.Body</to>
+      </copy>
+    </assign>
+    <invoke name="callCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
+            portType="ns1:checkWarehoouse_ptt" operation="checkWarehoouse" inputVariable="checkWarehoouse_InputVariable"
+            outputVariable="checkWarehoouse_OutputVariable"/>
+    <assign name="SetNeedTranfer">
+      <copy>
+        <from>$checkWarehoouse_OutputVariable.Response/Data/NeedTransfer</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$needTransfer</to>
+      </copy>
+    </assign>
+    <if name="CheckTranfer">
+      <condition>$needTransfer="true"</condition>
+      <forEach parallel="no" counterName="index" name="ForEachTransfer">
+        <startCounterValue>1</startCounterValue>
+        <finalCounterValue>count($checkWarehoouse_OutputVariable.Response/Data/WarehouseActions)</finalCounterValue>
+        <scope name="Scope1">
+          <sequence name="Sequence4">
+            <assign name="AssignInputGoodsTransfer">
+              <copy>
+                <from>$checkWarehoouse_OutputVariable.Response/Data/WarehouseActions[$index]</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$goodsTransfer_InputVariable.Body</to>
+              </copy>
+            </assign>
+            <invoke name="callGoodsTransfer" bpelx:invokeAsDetail="no" partnerLink="goodsTransfer"
+                    portType="ns2:goodsTransfer_ptt" operation="goodsTransfer"
+                    inputVariable="goodsTransfer_InputVariable" outputVariable="goodsTransfer_OutputVariable"/>
+          </sequence>
+        </scope>
+      </forEach>
+    </if>
+    <invoke name="callCreateOrder" bpelx:invokeAsDetail="no" partnerLink="createOrder" portType="ns3:createOrder_ptt"
+            operation="createOrder" inputVariable="createOrder_InputVariable"
+            outputVariable="createOrder_OutputVariable">
+      <bpelx:toProperties>
+        <bpelx:toProperty name="authorization" variable="authorization"/>
+      </bpelx:toProperties>
+    </invoke>
+    <assign name="AssignData">
+      <copy>
+        <from>200</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+      </copy>
+      <copy>
+        <from>"OK"</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="callcreateorder_client" portType="client:callCreateOrder" operation="process"
+           variable="outputVariable"/>
+  </sequence>
+</process>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema attributeFormDefault="unqualified" elementFormDefault="qualified"
-        targetNamespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/BPELProcess1"
+        targetNamespace="http://xmlns.oracle.com/bpel_process/callCreateOrderAfter/callCreateOrder"
         xmlns="http://www.w3.org/2001/XMLSchema">
   <element name="Body">
     <complexType>

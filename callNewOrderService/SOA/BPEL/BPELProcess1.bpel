@@ -83,7 +83,7 @@
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
-       <reply name="replyOutput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process"
+        <reply name="replyError" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process"
            variable="outputVariable"/>
       </sequence>
     </catchAll>
@@ -109,7 +109,7 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$tranferShip</to>
       </copy>
     </assign>
-    <invoke name="InvokeCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
+    <invoke name="callCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns3:Request_Response_ptt" operation="Request-Response" inputVariable="Input_CheckWh"
             outputVariable="Output_CheckWh"/>
     <assign name="SetNeedTranfer">
@@ -132,7 +132,7 @@
                   <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeGoodsTransfer.Body</to>
                 </copy>
               </assign>
-              <invoke name="InvokeGoodsTransfer" partnerLink="goodsTransfer" portType="ns4:Request_Response_ptt"
+              <invoke name="callGoodsTransfer" partnerLink="goodsTransfer" portType="ns4:Request_Response_ptt"
                       operation="Request-Response" inputVariable="InvokeGoodsTransfer"
                       outputVariable="OutputGoodsTransfer" bpelx:invokeAsDetail="no"/>
               <assign name="IncreaseShipFee">
@@ -164,7 +164,7 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_ShipFee.Body/ns2:Street</to>
       </copy>
     </assign>
-    <invoke name="InvokeShipFee" partnerLink="getShipFee" portType="ns1:Request_Response_ptt"
+    <invoke name="callShipFee" partnerLink="getShipFee" portType="ns1:Request_Response_ptt"
             operation="Request-Response" inputVariable="Input_ShipFee" outputVariable="Output_ShipFee"
             bpelx:invokeAsDetail="no"/>
     <assign name="AssignData">
