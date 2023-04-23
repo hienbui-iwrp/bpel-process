@@ -44,11 +44,13 @@
       </sequence>
     </complexType>
   </element>
-  <element name="processResponse" type="anyType">
-    <!--<complexType>
+  <element name="processResponse">
+    <complexType>
       <sequence>
-        <element name="result" type="string"/>
+        <element name="StatusCode"/>
+        <element name="Message"/>
+        <element name="Data"/>
       </sequence>
-    </complexType>-->
+    </complexType>
   </element>
 </schema>

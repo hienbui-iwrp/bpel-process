@@ -70,7 +70,7 @@
       <sequence name="Sequence2">
         <assign name="Assign1">
           <copy>
-            <from>200</from>
+            <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
           </copy>
           <copy>
