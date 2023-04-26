@@ -73,7 +73,7 @@
   <faultHandlers>
     <catchAll>
       <sequence name="Sequence3">
-        <assign name="AssignError">
+        <assign name="assignError">
           <copy>
             <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
@@ -99,7 +99,7 @@
     <!-- Receive input from requestor. (Note: This maps to operation defined in BPELProcess1.wsdl) -->
     <receive name="receiveInput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process"
              variable="inputVariable" createInstance="yes"/>
-    <assign name="Setup">
+    <assign name="setup">
       <copy>
         <from>$inputVariable.payload/client:ListElements</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_CheckWh.Body</to>
@@ -109,10 +109,10 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$tranferShip</to>
       </copy>
     </assign>
-    <invoke name="callCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
+    <invoke name="invoke_CheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns3:Request_Response_ptt" operation="Request-Response" inputVariable="Input_CheckWh"
             outputVariable="Output_CheckWh"/>
-    <assign name="SetNeedTranfer">
+    <assign name="setNeedTranfer">
       <copy>
         <from>$Output_CheckWh.GetResponse/Data/NeedTransfer</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$NeedTransfer</to>
@@ -126,16 +126,16 @@
           <finalCounterValue expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">ora:countNodes('Output_CheckWh', 'GetResponse', 'Data/WarehouseActions')</finalCounterValue>
           <scope name="Scope1">
             <sequence name="Sequence2">
-              <assign name="AssignInputGoodsTransfer">
+              <assign name="assignInputGoodsTransfer">
                 <copy>
                   <from>$Output_CheckWh.GetResponse/Data/WarehouseActions[$ForEach1Counter]</from>
                   <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$InvokeGoodsTransfer.Body</to>
                 </copy>
               </assign>
-              <invoke name="callGoodsTransfer" partnerLink="goodsTransfer" portType="ns4:Request_Response_ptt"
+              <invoke name="invoke_GoodsTransfer" partnerLink="goodsTransfer" portType="ns4:Request_Response_ptt"
                       operation="Request-Response" inputVariable="InvokeGoodsTransfer"
                       outputVariable="OutputGoodsTransfer" bpelx:invokeAsDetail="no"/>
-              <assign name="IncreaseShipFee">
+              <assign name="increaseShipFee">
                 <copy>
                   <from>$tranferShip+10000</from>
                   <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$tranferShip</to>
@@ -146,7 +146,7 @@
         </forEach>
       </sequence>
     </if>
-    <assign name="AssignInputShipFee">
+    <assign name="assignInputShipFee">
       <copy>
         <from>$inputVariable.payload/client:Address/client:Province</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_ShipFee.Body/ns2:Province</to>
@@ -164,16 +164,16 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$Input_ShipFee.Body/ns2:Street</to>
       </copy>
     </assign>
-    <invoke name="callShipFee" partnerLink="getShipFee" portType="ns1:Request_Response_ptt"
+    <invoke name="invoke_ShipFee" partnerLink="getShipFee" portType="ns1:Request_Response_ptt"
             operation="Request-Response" inputVariable="Input_ShipFee" outputVariable="Output_ShipFee"
             bpelx:invokeAsDetail="no"/>
-    <assign name="AssignData">
+    <assign name="assignData">
       <copy>
         <from>$Output_ShipFee.GetResponse/Data</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data</to>
       </copy>
     </assign>
-    <assign name="SumShipFee">
+    <assign name="sumShipFee">
       <copy>
         <from>$Output_ShipFee.GetResponse/Data/ShipFee+$tranferShip</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data/ShipFee</to>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="windows-1252" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org"
-            targetNamespace="http://xmlns.oracle.com/bpel_process/CallProductService/getProductDetail"
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/getProductDetail"
+            targetNamespace="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/getProductDetail"
             elementFormDefault="qualified">
   <xsd:element name="Body">
     <xsd:complexType>

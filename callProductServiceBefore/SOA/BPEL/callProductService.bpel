@@ -3,23 +3,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Oracle JDeveloper BPEL Designer 
   
-  Created: Mon Apr 24 02:46:42 ICT 2023
+  Created: Wed Apr 26 16:17:44 ICT 2023
   Author:  iwRp
   Type: BPEL 2.0 Process
   Purpose: Synchronous BPEL Process
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -->
-<process name="getShipFeeProject"
-         targetNamespace="http://xmlns.oracle.com/bpel_process/callNewOrderServiceAfter/getShipFeeProject"
+<process name="callProductService"
+         targetNamespace="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/callProductService"
          xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-         xmlns:client="http://xmlns.oracle.com/bpel_process/callNewOrderServiceAfter/getShipFeeProject"
+         xmlns:client="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/callProductService"
          xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:ui="http://xmlns.oracle.com/soa/designer"
          xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
          xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderServiceAfter/getShipFee">
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callProductServiceBefore/getProductDetail">
   <import ui:processWSDL="true"
-          namespace="http://xmlns.oracle.com/bpel_process/callNewOrderServiceAfter/getShipFeeProject"
-          location="../WSDLs/getShipFeeProject.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+          namespace="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/callProductService"
+          location="../WSDLs/callProductService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         PARTNERLINKS                                                      
@@ -32,9 +32,10 @@
       used for callback. The location and correlation information associated
       with the client role are automatically set using WS-Addressing.
     -->
-    <partnerLink name="getshipfeeproject_client" partnerLinkType="client:getShipFeeProject"
-                 myRole="getShipFeeProjectProvider"/>
-    <partnerLink name="getShipFee" partnerLinkType="ns1:getShipFee_plt" partnerRole="getShipFee_role"/>
+    <partnerLink name="callproductservice_client" partnerLinkType="client:callProductService"
+                 myRole="callProductServiceProvider"/>
+    <partnerLink name="getProductDetail" partnerLinkType="ns1:getProductDetail_plt"
+                 partnerRole="getProductDetail_role"/>
   </partnerLinks>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,11 +45,11 @@
   -->
   <variables>
     <!-- Reference to the message passed as input during initiation -->
-    <variable name="inputVariable" messageType="client:getShipFeeProjectRequestMessage"/>
+    <variable name="inputVariable" messageType="client:callProductServiceRequestMessage"/>
     <!-- Reference to the message that will be returned to the requester-->
-    <variable name="outputVariable" messageType="client:getShipFeeProjectResponseMessage"/>
-    <variable name="getShipFee_InputVariable" messageType="ns1:Body_msg_in"/>
-    <variable name="getShipFee_OutputVariable" messageType="ns1:Response_msg_out"/>
+    <variable name="outputVariable" messageType="client:callProductServiceResponseMessage"/>
+    <variable name="getProductDetail_InputVariable" messageType="ns1:Body_msg_in"/>
+    <variable name="getProductDetail_OutputVariable" messageType="ns1:Response_msg_out"/>
   </variables>
   <faultHandlers>
     <catchAll>
@@ -59,12 +60,12 @@
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
           </copy>
           <copy>
-            <from>"Server Error"</from>
+            <from>"BPEL getProductDetail  Error"</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
-        <reply name="replyError" partnerLink="getshipfeeproject_client" variable="outputVariable"
-               portType="client:getShipFeeProject" operation="getShipFee"/>
+        <reply name="replyError" partnerLink="callproductservice_client" variable="outputVariable"
+               portType="client:callProductService" operation="process"/>
       </sequence>
     </catchAll>
   </faultHandlers>
@@ -76,25 +77,34 @@
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   -->
   <sequence name="main">
-    <!-- Receive input from requestor. (Note: This maps to operation defined in getShipFeeProject.wsdl) -->
-    <receive name="receiveInput" partnerLink="getshipfeeproject_client" portType="client:getShipFeeProject"
-             operation="getShipFee" variable="inputVariable" createInstance="yes"/>
+    <!-- Receive input from requestor. (Note: This maps to operation defined in callProductService.wsdl) -->
+    <receive name="receiveInput" partnerLink="callproductservice_client" portType="client:callProductService"
+             operation="process" variable="inputVariable" createInstance="yes"/>
     <assign name="setup">
       <copy>
         <from>$inputVariable.payload</from>
-        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getShipFee_InputVariable.Body</to>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDetail_InputVariable.Body</to>
       </copy>
     </assign>
-    <invoke name="invoke_GetShipFee" bpelx:invokeAsDetail="no" partnerLink="getShipFee" portType="ns1:getShipFee_ptt"
-            operation="getShipFee" inputVariable="getShipFee_InputVariable" outputVariable="getShipFee_OutputVariable"/>
-    <assign name="assignData">
+    <invoke name="invoke_getProductDetail" bpelx:invokeAsDetail="no" partnerLink="getProductDetail"
+            portType="ns1:getProductDetail_ptt" operation="getProductDetail"
+            inputVariable="getProductDetail_InputVariable" outputVariable="getProductDetail_OutputVariable"/>
+    <assign name="assignOutput">
       <copy>
-        <from>$getShipFee_OutputVariable.Response</from>
-        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
+        <from>$getProductDetail_OutputVariable.Response/Data</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data</to>
+      </copy>
+      <copy>
+        <from>200</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+      </copy>
+      <copy>
+        <from>"OK"</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
       </copy>
     </assign>
     <!-- Generate reply to synchronous request -->
-    <reply name="replyOutput" partnerLink="getshipfeeproject_client" portType="client:getShipFeeProject"
-           operation="getShipFee" variable="outputVariable"/>
+    <reply name="replyOutput" partnerLink="callproductservice_client" portType="client:callProductService"
+           operation="process" variable="outputVariable"/>
   </sequence>
 </process>

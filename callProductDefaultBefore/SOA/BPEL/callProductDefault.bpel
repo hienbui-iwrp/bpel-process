@@ -98,7 +98,7 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDafault_InputVariable.Body</to>
       </copy>
     </assign>
-    <invoke name="callGetProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
+    <invoke name="invoke_GetProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
             portType="ns1:getProductDafault_ptt" operation="getProductDafault"
             inputVariable="getProductDafault_InputVariable" outputVariable="getProductDafault_OutputVariable"/>
     <assign name="setupOutput">

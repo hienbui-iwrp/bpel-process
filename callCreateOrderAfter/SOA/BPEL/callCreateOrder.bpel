@@ -73,7 +73,7 @@
   <faultHandlers>
     <catchAll>
       <sequence name="Sequence3">
-        <assign name="ReturnError">
+        <assign name="returnError">
           <copy>
             <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
@@ -103,7 +103,7 @@
         <bpelx:fromProperty name="authorization" variable="authorization"/>
       </bpelx:fromProperties>
     </receive>
-    <assign name="Setup">
+    <assign name="setup">
       <copy>
         <from>$inputVariable.payload</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$createOrder_InputVariable.Body</to>
@@ -113,10 +113,10 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$checkWarehoouse_InputVariable.Body</to>
       </copy>
     </assign>
-    <invoke name="callCheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
+    <invoke name="invoke_CheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns1:checkWarehoouse_ptt" operation="checkWarehoouse" inputVariable="checkWarehoouse_InputVariable"
             outputVariable="checkWarehoouse_OutputVariable"/>
-    <assign name="SetNeedTranfer">
+    <assign name="setNeedTranfer">
       <copy>
         <from>$checkWarehoouse_OutputVariable.Response/Data/NeedTransfer</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$needTransfer</to>
@@ -129,27 +129,27 @@
         <finalCounterValue>count($checkWarehoouse_OutputVariable.Response/Data/WarehouseActions)</finalCounterValue>
         <scope name="Scope1">
           <sequence name="Sequence4">
-            <assign name="AssignInputGoodsTransfer">
+            <assign name="assignInputGoodsTransfer">
               <copy>
                 <from>$checkWarehoouse_OutputVariable.Response/Data/WarehouseActions[$index]</from>
                 <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$goodsTransfer_InputVariable.Body</to>
               </copy>
             </assign>
-            <invoke name="callGoodsTransfer" bpelx:invokeAsDetail="no" partnerLink="goodsTransfer"
+            <invoke name="invoke_GoodsTransfer" bpelx:invokeAsDetail="no" partnerLink="goodsTransfer"
                     portType="ns2:goodsTransfer_ptt" operation="goodsTransfer"
                     inputVariable="goodsTransfer_InputVariable" outputVariable="goodsTransfer_OutputVariable"/>
           </sequence>
         </scope>
       </forEach>
     </if>
-    <invoke name="callCreateOrder" bpelx:invokeAsDetail="no" partnerLink="createOrder" portType="ns3:createOrder_ptt"
+    <invoke name="invoke_CreateOrder" bpelx:invokeAsDetail="no" partnerLink="createOrder" portType="ns3:createOrder_ptt"
             operation="createOrder" inputVariable="createOrder_InputVariable"
             outputVariable="createOrder_OutputVariable">
       <bpelx:toProperties>
         <bpelx:toProperty name="authorization" variable="authorization"/>
       </bpelx:toProperties>
     </invoke>
-    <assign name="AssignData">
+    <assign name="assignData">
       <copy>
         <from>200</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>

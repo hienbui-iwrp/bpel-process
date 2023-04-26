@@ -63,7 +63,7 @@
   <faultHandlers>
     <catchAll>
       <sequence name="Sequence1">
-        <assign name="ReturnError">
+        <assign name="returnError">
           <copy>
             <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
@@ -73,7 +73,7 @@
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
-        <reply name="Reply1" partnerLink="callcreateorder_client" variable="outputVariable"
+        <reply name="replyError" partnerLink="callcreateorder_client" variable="outputVariable"
                portType="client:callCreateOrder" operation="createOrder"/>
       </sequence>
     </catchAll>
@@ -99,14 +99,14 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$createOrder_InputVariable.Body</to>
       </copy>
     </assign>
-    <invoke name="callCreateOrder" partnerLink="createOrder" portType="ns1:createOrder_ptt" operation="createOrder"
+    <invoke name="invoke_CreateOrder" partnerLink="createOrder" portType="ns1:createOrder_ptt" operation="createOrder"
             inputVariable="createOrder_InputVariable" outputVariable="createOrder_OutputVariable"
             bpelx:invokeAsDetail="no">
       <bpelx:toProperties>
         <bpelx:toProperty name="authorization" variable="authorization"/>
       </bpelx:toProperties>
     </invoke>
-    <assign name="AssignOutput">
+    <assign name="assignOutput">
       <copy>
         <from>$createOrder_OutputVariable.Response</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>

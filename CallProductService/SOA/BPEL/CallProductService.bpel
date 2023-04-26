@@ -68,7 +68,7 @@
   <faultHandlers>
     <catchAll>
       <sequence name="Sequence2">
-        <assign name="Assign1">
+        <assign name="assignError">
           <copy>
             <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
@@ -78,7 +78,7 @@
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
-        <reply name="Reply1" partnerLink="client" variable="outputVariable" portType="client:CallProductService"
+        <reply name="replyError" partnerLink="client" variable="outputVariable" portType="client:CallProductService"
                operation="callProductDetail"/>
       </sequence>
     </catchAll>
@@ -94,7 +94,7 @@
     <!-- Receive input from requestor. (Note: This maps to operation defined in CallProductService.wsdl) -->
     <receive name="receiveInput" partnerLink="client" portType="client:CallProductService" operation="callProductDetail"
              variable="inputVariable" createInstance="yes"/>
-    <assign name="Setup_call">
+    <assign name="setup">
       <copy>
         <from>$inputVariable.payload</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDetail_InputVariable.Body</to>
@@ -106,10 +106,10 @@
     </assign>
     <flow name="Flow1">
       <sequence name="Sequence">
-        <invoke name="Invoke_getProdcutDetail" bpelx:invokeAsDetail="no" partnerLink="getProductDetail"
+        <invoke name="invoke_getProdcutDetail" bpelx:invokeAsDetail="no" partnerLink="getProductDetail"
                 portType="ns1:getProductDetail_ptt" operation="getProductDetail"
                 inputVariable="getProductDetail_InputVariable" outputVariable="getProductDetail_OutputVariable"/>
-        <assign name="ProductOutput">
+        <assign name="assignOutput">
           <copy>
             <from>$getProductDetail_OutputVariable.Response/Data</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Data</to>
@@ -117,7 +117,7 @@
         </assign>
       </sequence>
       <sequence name="Sequence1">
-        <invoke name="Invoke_getEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
+        <invoke name="invoke_getEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
                 portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
                 inputVariable="getEventByGoods_InputVariable" outputVariable="getEventByGoods_OutputVariable"/>
       </sequence>
