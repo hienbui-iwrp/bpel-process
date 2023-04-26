@@ -1,0 +1,113 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Wed Apr 26 16:00:21 ICT 2023
+  Author:  iwRp
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="callProductDefault"
+               targetNamespace="http://xmlns.oracle.com/bpel_process/callProductDefaultBefore/callProductDefault"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/bpel_process/callProductDefaultBefore/callProductDefault"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callProductDefaultBefore/getProductDefault"
+         xmlns:ns2="http://xmlns.oracle.com/bpel_process/callProductDefaultBefore/getProductDefault"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callProductDefaultBefore/callProductDefault" location="../WSDLs/callProductDefault.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="callproductdefault_client" partnerLinkType="client:callProductDefault" myRole="callProductDefaultProvider"/>
+    <partnerLink name="getProductDefault" partnerLinkType="ns1:getProductDafault_plt"
+                 partnerRole="getProductDafault_role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:callProductDefaultRequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:callProductDefaultResponseMessage"/>
+    <variable name="getProductDafault_InputVariable" messageType="ns1:Body_msg_in"/>
+    <variable name="getProductDafault_OutputVariable" messageType="ns1:Response_msg_out"/>
+  </variables>
+  <faultHandlers>
+    <catchAll>
+      <sequence name="Sequence1">
+        <assign name="assignError">
+          <copy>
+            <from>500</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payloadd/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"Server Error"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payloadd/client:Message</to>
+          </copy>
+        </assign>
+        <reply name="replyError" partnerLink="callproductdefault_client" variable="outputVariable"
+               portType="client:callProductDefault" operation="process"/>
+      </sequence>
+    </catchAll>
+  </faultHandlers>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in callProductDefault.wsdl) -->
+    <receive name="receiveInput" partnerLink="callproductdefault_client" portType="client:callProductDefault" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="setup">
+      <copy>
+        <from>$inputVariable.payload</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDafault_InputVariable.Body</to>
+      </copy>
+    </assign>
+    <invoke name="callGetProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
+            portType="ns1:getProductDafault_ptt" operation="getProductDafault"
+            inputVariable="getProductDafault_InputVariable" outputVariable="getProductDafault_OutputVariable"/>
+    <assign name="setupOutput">
+      <copy>
+        <from>$getProductDafault_OutputVariable.Response</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payloadd</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="callproductdefault_client" portType="client:callProductDefault" operation="process" variable="outputVariable"/>
+  </sequence>
+</process>

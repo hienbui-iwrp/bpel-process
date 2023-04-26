@@ -32,6 +32,7 @@
       <hash><url n="URL" path="callNewOrderService/callNewOrderService.jpr"/></hash>
       <hash><url n="URL" path="callNewOrderServiceAfter/callNewOrderServiceAfter.jpr"/></hash>
       <hash><url n="URL" path="CallProductDefault/CallProductDefault.jpr"/></hash>
+      <hash><url n="URL" path="callProductDefaultBefore/callProductDefaultBefore.jpr"/></hash>
       <hash><url n="URL" path="CallProductService/CallProductService.jpr"/></hash>
    </list>
 </jws:workspace>

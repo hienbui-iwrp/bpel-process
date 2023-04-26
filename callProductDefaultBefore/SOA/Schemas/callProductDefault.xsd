@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+        targetNamespace="http://xmlns.oracle.com/bpel_process/callProductDefaultBefore/callProductDefault"
+        xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="Body">
+    <complexType>
+      <sequence>
+        <element name="PageSize" type="int"/>
+        <element name="PageNumber" type="int"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="Response">
+    <complexType>
+      <sequence>
+        <element name="StatusCode" type="int"/>
+        <element name="Message" type="string"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

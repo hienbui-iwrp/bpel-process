@@ -71,7 +71,7 @@
   <faultHandlers>
     <catchAll>
       <sequence name="Sequence2">
-        <assign name="Assign1">
+        <assign name="assignError">
           <copy>
             <from>500</from>
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
@@ -81,7 +81,7 @@
             <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
           </copy>
         </assign>
-        <reply name="Reply1" partnerLink="client" variable="outputVariable" portType="client:CallProductDefault"
+        <reply name="replyError" partnerLink="client" variable="outputVariable" portType="client:CallProductDefault"
                operation="process"/>
       </sequence>
     </catchAll>
@@ -107,7 +107,7 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_InputVariable.Body/ns3:PageNumber</to>
       </copy>
     </assign>
-    <invoke name="Invoke_getProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
+    <invoke name="callGetProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
             portType="ns1:getProductDefault_ptt" operation="getProductDefault"
             inputVariable="getProductDefault_InputVariable" outputVariable="getProductDefault_OutputVariable"/>
     <forEach parallel="no" counterName="index" name="ForEachProduct">
@@ -121,7 +121,7 @@
               <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getEventByGoods_InputVariable.Body/ns4:GoodsId</to>
             </copy>
           </assign>
-          <invoke name="Invoke_getEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
+          <invoke name="callGetEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
                   portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
                   inputVariable="getEventByGoods_InputVariable" outputVariable="getEventByGoods_OutputVariable"/>
           <if name="checkEvent">
