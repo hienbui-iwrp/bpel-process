@@ -1,0 +1,31 @@
+<wsdl:definitions
+     name="service"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/sequence/service"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/sequence/service"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/sequence/BPELProcess1"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="Request_Response_plt" >
+    <plt:role name="Request-Response_role" >
+      <plt:portType name="tns:Request_Response_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/bpel_process/sequence/BPELProcess1" schemaLocation="../Schemas/BPELProcess1.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="process_msg_in">
+        <wsdl:part name="process" element="msg_in_out:process"/>
+    </wsdl:message>
+    <wsdl:message name="processResponse_msg_out">
+        <wsdl:part name="processResponse" element="msg_in_out:processResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="Request_Response_ptt">
+        <wsdl:operation name="Request-Response">
+            <wsdl:input message="tns:process_msg_in"/>
+            <wsdl:output message="tns:processResponse_msg_out"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
