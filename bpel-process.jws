@@ -35,5 +35,12 @@
       <hash><url n="URL" path="callProductDefaultBefore/callProductDefaultBefore.jpr"/></hash>
       <hash><url n="URL" path="CallProductService/CallProductService.jpr"/></hash>
       <hash><url n="URL" path="callProductServiceBefore/callProductServiceBefore.jpr"/></hash>
+      <hash><url n="URL" path="flow-bpel/flow-bpel.jpr"/></hash>
+      <hash><url n="URL" path="if-bpel/if-bpel.jpr"/></hash>
+      <hash><url n="URL" path="pick-bpel/pick-bpel.jpr"/></hash>
+      <hash><url n="URL" path="repeatUntil-bpel/repeatUntil-bpel.jpr"/></hash>
+      <hash><url n="URL" path="repeat-while/repeat-while.jpr"/></hash>
+      <hash><url n="URL" path="sequence-bpel/sequence-bpel.jpr"/></hash>
+      <hash><url n="URL" path="while-bpel/while-bpel.jpr"/></hash>
    </list>
 </jws:workspace>
