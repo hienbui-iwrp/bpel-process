@@ -14,7 +14,6 @@ temp/
 
 
 # Ignore deployment files
-deploy/
 undeploy/
 logs/
 classes/
