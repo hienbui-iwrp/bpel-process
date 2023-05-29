@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductDefault/getEventByGoods"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductDefault/getEventByGoods"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/CallProductDefault/getEventByGoods"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/CallProductDefault/getEventByGoods"
     >
   <plt:partnerLinkType name="getEventByGoods_plt" >
     <plt:role name="getEventByGoods_role" >

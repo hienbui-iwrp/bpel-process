@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/checkWarehouse"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/checkWarehouse"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://www.example.org"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://www.example.org"
     >
   <plt:partnerLinkType name="checkWarehoouse_plt" >
     <plt:role name="checkWarehoouse_role" >
