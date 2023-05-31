@@ -38,7 +38,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callProductServiceBefore/getProductDetail#wsdl.endpoint(getProductDetail/getProductDetail_pt)"
                 location="WSDLs/getProductDetail.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://localhost:30000/api/bff/goods-service/products-detail</property>
+      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/goods-service/products-detail</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>

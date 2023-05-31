@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callProductServiceBefore/getProductDetail"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callProductServiceBefore/getProductDetail"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/getProductDetail"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callProductServiceBefore/getProductDetail"
     >
   <plt:partnerLinkType name="getProductDetail_plt" >
     <plt:role name="getProductDetail_role" >

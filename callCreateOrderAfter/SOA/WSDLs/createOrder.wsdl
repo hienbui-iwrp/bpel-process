@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/createOrder"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrderAfter/createOrder"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://www.example.org"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://www.example.org"
     >
   <plt:partnerLinkType name="createOrder_plt" >
     <plt:role name="createOrder_role" >

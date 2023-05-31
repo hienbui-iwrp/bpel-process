@@ -33,10 +33,10 @@
     <interface.wsdl interface="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrder/createOrder#wsdl.interface(createOrder_ptt)"/>
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCreateOrder/createOrder#wsdl.endpoint(createOrder/createOrder_pt)"
                 location="WSDLs/createOrder.wsdl" supports="http">
+      <property name="oracle.webservices.http.headers" type="xs:string" many="false">authorization</property>
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://localhost:20000/api/bff/order-service/customer/make-order</property>
+      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:20000/api/bff/order-service/customer/make-order</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
-      <property name="oracle.webservices.http.headers">authorization</property>
     </binding.ws>
   </reference>
   <wire>

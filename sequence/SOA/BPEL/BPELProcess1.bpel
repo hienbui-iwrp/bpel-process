@@ -1,0 +1,72 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Wed May 17 13:43:53 ICT 2023
+  Author:  TUAN PHONG
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="BPELProcess1"
+               targetNamespace="http://xmlns.oracle.com/bpel_process/sequence/BPELProcess1"
+               xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+               xmlns:client="http://xmlns.oracle.com/bpel_process/sequence/BPELProcess1"
+               xmlns:ora="http://schemas.oracle.com/xpath/extension"
+               xmlns:ui="http://xmlns.oracle.com/soa/designer"
+               xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/sequence/service">
+
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/sequence/BPELProcess1" location="../WSDLs/BPELProcess1.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    --> 
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="bpelprocess1_client" partnerLinkType="client:BPELProcess1" myRole="BPELProcess1Provider"/>
+    <partnerLink name="service" partnerLinkType="ns1:Request_Response_plt" partnerRole="Request-Response_role"/>
+  </partnerLinks>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:BPELProcess1RequestMessage"/>
+
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:BPELProcess1ResponseMessage"/>
+    <variable name="Invoke1_Request-Response_InputVariable" messageType="ns1:process_msg_in"/>
+    <variable name="Invoke1_Request-Response_OutputVariable" messageType="ns1:processResponse_msg_out"/>
+  </variables>
+
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+
+    <!-- Receive input from requestor. (Note: This maps to operation defined in BPELProcess1.wsdl) -->
+    <receive name="receiveInput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process" variable="inputVariable" createInstance="yes"/>
+    <invoke name="Invoke1" partnerLink="service" portType="ns1:Request_Response_ptt"
+            operation="Request-Response" inputVariable="Invoke1_Request-Response_InputVariable"
+            outputVariable="Invoke1_Request-Response_OutputVariable" bpelx:invokeAsDetail="no"/>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="bpelprocess1_client" portType="client:BPELProcess1" operation="process" variable="outputVariable"/>
+  </sequence>
+</process>
