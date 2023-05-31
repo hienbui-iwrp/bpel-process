@@ -30,7 +30,8 @@
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
          xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap"
-         xmlns:ns4="http://xmlns.oracle.com/bpel_process/CallProductDefault/getEventByGoods">
+         xmlns:ns4="http://xmlns.oracle.com/bpel_process/CallProductDefault/getEventByGoods"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/CallProductDefault/CallProductDefault" location="../WSDLs/CallProductDefault.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -67,6 +68,7 @@
     <variable name="getProductDefault_OutputVariable" messageType="ns1:Response_msg_out"/>
     <variable name="getEventByGoods_InputVariable" messageType="ns2:Body_msg_in"/>
     <variable name="getEventByGoods_OutputVariable" messageType="ns2:Response_msg_out"/>
+    <variable name="index" type="xsd:int"/>
   </variables>
   <faultHandlers>
     <catchAll>
@@ -106,11 +108,60 @@
         <from>$inputVariable.payload/client:PageNumber</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_InputVariable.Body/ns3:PageNumber</to>
       </copy>
+      <copy>
+        <from>0</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+      </copy>
     </assign>
     <invoke name="invoke_GetProductDefault" bpelx:invokeAsDetail="no" partnerLink="getProductDefault"
             portType="ns1:getProductDefault_ptt" operation="getProductDefault"
             inputVariable="getProductDefault_InputVariable" outputVariable="getProductDefault_OutputVariable"/>
-    <forEach parallel="no" counterName="index" name="ForEachProduct">
+    <while name="ForEachProduct">
+      <condition>$index=count($getProductDefault_OutputVariable.Response/Data)</condition>
+        <sequence name="Sequence1">
+          <assign name="setupEvent">
+            <copy>
+              <from>$getProductDefault_OutputVariable.Response/Data[$index]/GoodsId</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getEventByGoods_InputVariable.Body/ns4:GoodsId</to>
+            </copy>
+            <copy>
+              <from>$index+1</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+            </copy>
+          </assign>
+          <invoke name="invoke_GetEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
+                  portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
+                  inputVariable="getEventByGoods_InputVariable" outputVariable="getEventByGoods_OutputVariable"/>
+          <if name="checkEvent">
+            <condition>$getEventByGoods_OutputVariable.Response/Data</condition>
+            <assign name="assignNewPrice">
+              <copy>
+                <from>$getProductDefault_OutputVariable.Response/Data[$index]/UnitPrice*(1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_OutputVariable.Response/Data[$index]/Price</to>
+              </copy>
+              <copy>
+                <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
+                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_OutputVariable.Response/Data[$index]/Discount</to>
+              </copy>
+            </assign>
+            <else>
+              <sequence>
+                <assign name="assignOldPrice">
+                  <copy>
+                    <from>$getProductDefault_OutputVariable.Response/Data[$index]/UnitPrice</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_OutputVariable.Response/Data[$index]/Price</to>
+                  </copy>
+                  <copy>
+                    <from>0</from>
+                    <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getProductDefault_OutputVariable.Response/Data[$index]/Discount</to>
+                  </copy>
+                </assign>
+              </sequence>
+            </else>
+          </if>
+        </sequence>
+    </while>
+    <!--<forEach parallel="no" counterName="index" name="ForEachProduct">
       <startCounterValue>1</startCounterValue>
       <finalCounterValue>count($getProductDefault_OutputVariable.Response/Data)</finalCounterValue>
       <scope name="Scope1">
@@ -153,7 +204,9 @@
           </if>
         </sequence>
       </scope>
-    </forEach>
+    </forEach>-->
+  
+    
     <assign name="setupOutput">
       <copy>
         <from>$getProductDefault_OutputVariable.Response</from>

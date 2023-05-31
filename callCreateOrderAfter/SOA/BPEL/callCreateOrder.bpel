@@ -49,6 +49,7 @@
     <partnerLink name="checkWarehouse" partnerLinkType="ns1:checkWarehoouse_plt" partnerRole="checkWarehoouse_role"/>
     <partnerLink name="goodsTransfer" partnerLinkType="ns2:goodsTransfer_plt" partnerRole="goodsTransfer_role"/>
     <partnerLink name="createOrder" partnerLinkType="ns3:createOrder_plt" partnerRole="createOrder_role"/>
+    
   </partnerLinks>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,6 +70,7 @@
     <variable name="needTransfer" type="xsd:boolean"/>
     <variable name="goodsTransfer_InputVariable" messageType="ns2:Body_msg_in"/>
     <variable name="goodsTransfer_OutputVariable" messageType="ns2:Response_msg_out"/>
+    <variable name="index" type="xsd:int"/>
   </variables>
   <faultHandlers>
     <catchAll>
@@ -112,6 +114,10 @@
         <from>$inputVariable.payload/client:ListElements</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$checkWarehoouse_InputVariable.Body</to>
       </copy>
+      <copy>
+        <from>0</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+      </copy>
     </assign>
     <invoke name="invoke_CheckWarehouse" bpelx:invokeAsDetail="no" partnerLink="checkWarehouse"
             portType="ns1:checkWarehoouse_ptt" operation="checkWarehoouse" inputVariable="checkWarehoouse_InputVariable"
@@ -124,23 +130,28 @@
     </assign>
     <if name="CheckTranfer">
       <condition>$needTransfer="true"</condition>
-      <forEach parallel="no" counterName="index" name="ForEachTransfer">
-        <startCounterValue>1</startCounterValue>
-        <finalCounterValue>count($checkWarehoouse_OutputVariable.Response/Data/WarehouseActions)</finalCounterValue>
-        <scope name="Scope1">
-          <sequence name="Sequence4">
-            <assign name="assignInputGoodsTransfer">
-              <copy>
-                <from>$checkWarehoouse_OutputVariable.Response/Data/WarehouseActions[$index]</from>
-                <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$goodsTransfer_InputVariable.Body</to>
-              </copy>
-            </assign>
-            <invoke name="invoke_GoodsTransfer" bpelx:invokeAsDetail="no" partnerLink="goodsTransfer"
-                    portType="ns2:goodsTransfer_ptt" operation="goodsTransfer"
-                    inputVariable="goodsTransfer_InputVariable" outputVariable="goodsTransfer_OutputVariable"/>
+      <sequence name="Sequence5">
+        <while name="ForEach">
+        <condition>$index=count($checkWarehoouse_OutputVariable.Response/Data/WarehouseActions)</condition>
+        <sequence name="Scope1">
+            <sequence name="Sequence4">
+              <assign name="assignInputGoodsTransfer">
+                <copy>
+                  <from>$checkWarehoouse_OutputVariable.Response/Data/WarehouseActions[$index]</from>
+                  <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$goodsTransfer_InputVariable.Body</to>
+                </copy>
+                <copy>
+                  <from>$index+1</from>
+                  <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+                </copy>
+              </assign>
+              <invoke name="invoke_GoodsTransfer" bpelx:invokeAsDetail="no" partnerLink="goodsTransfer"
+                      portType="ns2:goodsTransfer_ptt" operation="goodsTransfer"
+                      inputVariable="goodsTransfer_InputVariable" outputVariable="goodsTransfer_OutputVariable"/>
+            </sequence>
           </sequence>
-        </scope>
-      </forEach>
+          </while>
+      </sequence>
     </if>
     <invoke name="invoke_CreateOrder" bpelx:invokeAsDetail="no" partnerLink="createOrder" portType="ns3:createOrder_ptt"
             operation="createOrder" inputVariable="createOrder_InputVariable"
