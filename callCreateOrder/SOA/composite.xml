@@ -35,7 +35,7 @@
                 location="WSDLs/createOrder.wsdl" supports="http">
       <property name="oracle.webservices.http.headers" type="xs:string" many="false">authorization</property>
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://3.0.146.236:20000/api/bff/order-service/customer/make-order</property>
+      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:20000/api/bff/order-service/customer/make-order</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
