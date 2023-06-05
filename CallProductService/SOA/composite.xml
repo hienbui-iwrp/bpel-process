@@ -43,7 +43,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getProductDetail#wsdl.endpoint(getProductDetail/getProductDetail_pt)"
                 location="WSDLs/getProductDetail.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/goods-service/products-detail</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/goods-service/products-detail</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
@@ -52,7 +52,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/CallProductService/getEventByGoods#wsdl.endpoint(getEventByGoods/getEventByGoods_pt)"
                 location="WSDLs/getEventByGoods.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/event-service/event-by-goods</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/event-service/event-by-goods</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
