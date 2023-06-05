@@ -48,7 +48,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/getShipFee#wsdl.endpoint(getShipFee/Request_Response_pt)"
                 location="WSDLs/getShipFee.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/order-service/get-ship-fee</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/order-service/get-ship-fee</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
@@ -57,7 +57,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/checkWarehouse#wsdl.endpoint(checkWarehouse/Request_Response_pt)"
                 location="WSDLs/checkWarehouse.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/goods-service/check-wh</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/goods-service/check-wh</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
@@ -66,7 +66,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/goodsTransfer#wsdl.endpoint(goodsTransfer/Request_Response_pt)"
                 location="WSDLs/goodsTransfer.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://18.138.229.181:30000/api/bff/goods-service/wh-transfer</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/goods-service/wh-transfer</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
