@@ -27,6 +27,7 @@
       <string v="oracle.jdeveloper.model.PathsConfiguration/ResourceBundlesContentSet"/>
    </list>
    <list n="listOfChildren">
+      <hash><url n="URL" path="callCartService/callCartService.jpr"/></hash>
       <hash><url n="URL" path="callCreateOrder/callCreateOrder.jpr"/></hash>
       <hash><url n="URL" path="callCreateOrderAfter/callCreateOrderAfter.jpr"/></hash>
       <hash><url n="URL" path="callNewOrderService/callNewOrderService.jpr"/></hash>

@@ -30,7 +30,8 @@
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
          xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callNewOrderService/goodsTransfer" xmlns:ns7="json">
+         xmlns:ns6="http://xmlns.oracle.com/bpel_process/callNewOrderService/goodsTransfer" xmlns:ns7="json"
+         xmlns:ns8="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callNewOrderService/httpReference">
   <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callNewOrderService/BPELProcess1"
           location="../WSDLs/BPELProcess1.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
   <!-- 
@@ -49,6 +50,7 @@
     <partnerLink name="getShipFee" partnerLinkType="ns1:Request_Response_plt" partnerRole="Request-Response_role"/>
     <partnerLink name="checkWarehouse" partnerLinkType="ns3:Request_Response_plt" partnerRole="Request-Response_role"/>
     <partnerLink name="goodsTransfer" partnerLinkType="ns4:Request_Response_plt" partnerRole="Request-Response_role"/>
+    <partnerLink name="httpReference" partnerLinkType="ns8:Request_Response_plt" partnerRole="Request-Response_role"/>
   </partnerLinks>
   <!-- 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

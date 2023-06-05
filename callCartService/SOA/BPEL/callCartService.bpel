@@ -1,0 +1,158 @@
+<?xml version = "1.0" encoding = "UTF-8" ?>
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  Oracle JDeveloper BPEL Designer 
+  
+  Created: Mon Jun 05 23:12:53 ICT 2023
+  Author:  Lenovo
+  Type: BPEL 2.0 Process
+  Purpose: Synchronous BPEL Process
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<process name="callCartService" targetNamespace="http://xmlns.oracle.com/bpel_process/callCartService/callCartService"
+         xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:client="http://xmlns.oracle.com/bpel_process/callCartService/callCartService"
+         xmlns:ora="http://schemas.oracle.com/xpath/extension" xmlns:ui="http://xmlns.oracle.com/soa/designer"
+         xmlns:bpelx="http://schemas.oracle.com/bpel/extension" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+         xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+         xmlns:ns1="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCartService/getCart"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCartService/getEventByGoods"
+         xmlns:ns3="http://xmlns.oracle.com/bpel_process/callCartService/getCart"
+         xmlns:ns4="http://xmlns.oracle.com/bpel_process/callCartService/getEventByGoods"
+         xmlns:oraext="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.ExtFunc"
+         xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions"
+         xmlns:xp20="http://www.oracle.com/XSL/Transform/java/oracle.tip.pc.services.functions.Xpath20"
+         xmlns:ess="http://xmlns.oracle.com/scheduler" xmlns:hwf="http://xmlns.oracle.com/bpel/workflow/xpath"
+         xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
+         xmlns:dvm="http://www.oracle.com/XSL/Transform/java/oracle.tip.dvm.LookupValue"
+         xmlns:bpws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+         xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
+         xmlns:ids="http://xmlns.oracle.com/bpel/services/IdentityService/xpath"
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap">
+  <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/bpel_process/callCartService/callCartService"
+          location="../WSDLs/callCartService.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+  <!-- 
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        PARTNERLINKS                                                      
+        List of services participating in this BPEL process               
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    -->
+  <partnerLinks>
+    <!-- 
+      The 'client' role represents the requester of this service. It is 
+      used for callback. The location and correlation information associated
+      with the client role are automatically set using WS-Addressing.
+    -->
+    <partnerLink name="callcartservice_client" partnerLinkType="client:callCartService"
+                 myRole="callCartServiceProvider"/>
+    <partnerLink name="getCart" partnerLinkType="ns1:getCart_plt" partnerRole="getCart_role"/>
+    <partnerLink name="getEventByGoods" partnerLinkType="ns2:getEventByGoods_plt" partnerRole="getEventByGoods_role"/>
+  </partnerLinks>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      VARIABLES                                                        
+      List of messages and XML documents used within this BPEL process 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <variables>
+    <!-- Reference to the message passed as input during initiation -->
+    <variable name="inputVariable" messageType="client:callCartServiceRequestMessage"/>
+    <!-- Reference to the message that will be returned to the requester-->
+    <variable name="outputVariable" messageType="client:callCartServiceResponseMessage"/>
+    <variable name="getCart_InputVariable" messageType="ns1:Body_msg_in"/>
+    <variable name="getCart_OutputVariable" messageType="ns1:Response_msg_out"/>
+    <variable name="authorization" type="xsd:string"/>
+    <variable name="index" type="xsd:int"/>
+    <variable name="getEventByGoods_InputVariable" messageType="ns2:Body_msg_in"/>
+    <variable name="getEventByGoods_OutputVariable" messageType="ns2:Response_msg_out"/>
+  </variables>
+  <!-- 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     ORCHESTRATION LOGIC                                               
+     Set of activities coordinating the flow of messages across the    
+     services integrated within this business process                  
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  -->
+  <sequence name="main">
+    <!-- Receive input from requestor. (Note: This maps to operation defined in callCartService.wsdl) -->
+    <receive name="receiveInput" partnerLink="callcartservice_client" portType="client:callCartService"
+             operation="process" variable="inputVariable" createInstance="yes">
+      <bpelx:fromProperties>
+        <bpelx:fromProperty name="authorization" variable="authorization"/>
+      </bpelx:fromProperties>
+    </receive>
+    <assign name="Setup">
+      <copy>
+        <from>$inputVariable.payload/client:UserId</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_InputVariable.Body/ns3:UserId</to>
+      </copy>
+      <copy>
+        <from>0</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+      </copy>
+    </assign>
+    <invoke name="Call_GetCart" bpelx:invokeAsDetail="no" partnerLink="getCart" portType="ns1:getCart_ptt"
+            operation="getCart" inputVariable="getCart_InputVariable" outputVariable="getCart_OutputVariable">
+      <bpelx:toProperties>
+        <bpelx:toProperty name="authorization" variable="authorization"/>
+      </bpelx:toProperties>
+    </invoke>
+    <while name="ForEach">
+      <condition>$index&lt;count($getCart_OutputVariable.Response/Data/Goods)</condition>
+      <sequence name="Scope1">
+        <sequence name="Sequence4">
+          <assign name="assignInputGoodsTransfer">
+          <copy>
+              <from>$index+1</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+            </copy>
+            <copy>
+              <from>$getCart_OutputVariable.Response/Data/Goods[$index]/GoodsId</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getEventByGoods_InputVariable.Body/ns4:GoodsId</to>
+            </copy>
+            
+          </assign>
+          <invoke name="Call_GetEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
+                  portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
+                  inputVariable="getEventByGoods_InputVariable" outputVariable="getEventByGoods_OutputVariable"/>
+        </sequence>
+        <if name="checkEvent">
+          <condition>$getEventByGoods_OutputVariable.Response/Data</condition>
+          <assign name="assignNewPrice">
+            <copy>
+              <from>$getCart_OutputVariable.Response/Data/Goods[$index]/UnitPrice*(1-$getEventByGoods_OutputVariable.Response/Data/Discount)</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_OutputVariable.Response/Data/Goods[$index]/Price</to>
+            </copy>
+            <copy>
+              <from>$getEventByGoods_OutputVariable.Response/Data/Discount</from>
+              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_OutputVariable.Response/Data/Goods[$index]/Discount</to>
+            </copy>
+          </assign>
+          <else>
+            <sequence>
+              <assign name="assignOldPrice">
+                <copy>
+                  <from>$getCart_OutputVariable.Response/Data/Goods[$index]/UnitPrice</from>
+                  <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_OutputVariable.Response/Data/Goods[$index]/Price</to>
+                </copy>
+                <copy>
+                  <from>0</from>
+                  <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_OutputVariable.Response/Data/Goods[$index]/Discount</to>
+                </copy>
+              </assign>
+            </sequence>
+          </else>
+        </if>
+      </sequence>
+    </while>
+    <assign name="Reply">
+      <copy>
+        <from>$getCart_OutputVariable.Response</from>
+        <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload</to>
+      </copy>
+    </assign>
+    <!-- Generate reply to synchronous request -->
+    <reply name="replyOutput" partnerLink="callcartservice_client" portType="client:callCartService" operation="process"
+           variable="outputVariable"/>
+  </sequence>
+</process>
