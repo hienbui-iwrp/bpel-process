@@ -3,8 +3,8 @@
      targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCartService/getCart"
      xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCartService/getCart"
      xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
-     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callCartService/getCart"
      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+     xmlns:msg_in_out="http://xmlns.oracle.com/bpel_process/callCartService/getCart"
     >
   <plt:partnerLinkType name="getCart_plt" >
     <plt:role name="getCart_role" >

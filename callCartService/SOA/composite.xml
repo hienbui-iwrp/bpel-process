@@ -46,7 +46,7 @@
                 location="WSDLs/getCart.wsdl" supports="http">
       <property name="oracle.webservices.http.headers" type="xs:string" many="false">authorization</property>
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://localhost:20000/api/bff/cart-service/get-cart</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:20000/api/bff/cart-service/get-cart</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
@@ -55,7 +55,7 @@
     <binding.ws port="http://xmlns.oracle.com/pcbpel/adapter/http/bpel-process/callCartService/getEventByGoods#wsdl.endpoint(getEventByGoods/getEventByGoods_pt)"
                 location="WSDLs/getEventByGoods.wsdl" supports="http">
       <property name="http.verb" type="xs:string" many="false">POST</property>
-      <property name="endpointURI" type="xs:string" many="false">http://localhost:30000/api/bff/event-service/event-by-goods</property>
+      <property name="endpointURI" type="xs:string" many="false">http://13.229.146.220:30000/api/bff/event-service/event-by-goods</property>
       <property name="http.payload" type="xs:string" many="false">xml</property>
     </binding.ws>
   </reference>
