@@ -73,6 +73,24 @@
      services integrated within this business process                  
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   -->
+  <faultHandlers>
+    <catchAll>
+      <sequence name="Sequence3">
+        <assign name="returnError">
+          <copy>
+            <from>500</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:StatusCode</to>
+          </copy>
+          <copy>
+            <from>"Server Error"</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$outputVariable.payload/client:Message</to>
+          </copy>
+        </assign>
+        <reply name="replyOutput" partnerLink="callcartservice_client" portType="client:callCartService" operation="process"
+           variable="outputVariable"/>
+      </sequence>
+    </catchAll>
+  </faultHandlers>
   <sequence name="main">
     <!-- Receive input from requestor. (Note: This maps to operation defined in callCartService.wsdl) -->
     <receive name="receiveInput" partnerLink="callcartservice_client" portType="client:callCartService"
@@ -87,7 +105,7 @@
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getCart_InputVariable.Body/ns3:UserId</to>
       </copy>
       <copy>
-        <from>0</from>
+        <from>1</from>
         <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
       </copy>
     </assign>
@@ -97,20 +115,15 @@
         <bpelx:toProperty name="authorization" variable="authorization"/>
       </bpelx:toProperties>
     </invoke>
-    <while name="ForEach">
-      <condition>$index&lt;count($getCart_OutputVariable.Response/Data/Goods)</condition>
+    <while name="While">
+      <condition>$index&lt;=count($getCart_OutputVariable.Response/Data/Goods)</condition>
       <sequence name="Scope1">
         <sequence name="Sequence4">
           <assign name="assignInputGoodsTransfer">
-          <copy>
-              <from>$index+1</from>
-              <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
-            </copy>
             <copy>
               <from>$getCart_OutputVariable.Response/Data/Goods[$index]/GoodsId</from>
               <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$getEventByGoods_InputVariable.Body/ns4:GoodsId</to>
             </copy>
-            
           </assign>
           <invoke name="Call_GetEventByGoods" bpelx:invokeAsDetail="no" partnerLink="getEventByGoods"
                   portType="ns2:getEventByGoods_ptt" operation="getEventByGoods"
@@ -143,6 +156,12 @@
             </sequence>
           </else>
         </if>
+        <assign name="updateConditon">
+          <copy>
+            <from>$index+1</from>
+            <to expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xpath1.0">$index</to>
+          </copy>
+        </assign>
       </sequence>
     </while>
     <assign name="Reply">

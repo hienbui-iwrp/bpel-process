@@ -1,14 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<schema attributeFormDefault="unqualified"
-	elementFormDefault="qualified"
-	targetNamespace="http://xmlns.oracle.com/bpel_process/callCartService/callCartService"
-	xmlns="http://www.w3.org/2001/XMLSchema">
-	<element name="process">
-  <complexType>
-   <sequence>
-    <element name="UserId" type="string"/>
-   </sequence>
-  </complexType>
- </element>
-	<element name="processResponse" type="anyType"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+        targetNamespace="http://xmlns.oracle.com/bpel_process/callCartService/callCartService"
+        xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="process">
+    <complexType>
+      <sequence>
+        <element name="UserId" type="string"/>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="processResponse">
+    <complexType>
+      <sequence>
+        <element name="StatusCode"/>
+        <element name="Message"/>
+        <element name="Data"/>
+      </sequence>
+    </complexType>
+  </element>
 </schema>
